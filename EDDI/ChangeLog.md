@@ -5,6 +5,10 @@ Full details of the variables available for each noted event, and VoiceAttack in
 ### Development
   * Core
     * EDDI will now sync to the most current journal on startup (dramatically improving the accuracy of data available after startup)
+  * Speech responder
+    * Revised `Body scanned` event variables for better interchangeability with with the `BodyDetails` function
+      * WAS: `atmospherecomposition`, IS: `atmospherecompositions`
+      * WAS: `solidcomposition`, IS: `solidcompositions`
 
 ### 3.3.3-b1
   * Core
