@@ -885,10 +885,27 @@ namespace Eddi
                 CurrentStarSystem.Faction = controllingFaction;
             }
 
-            // Update squadron data, if available
+            // Update system faction data if available
             if (theEvent.factions != null)
             {
-                updateSquadronData(theEvent.factions);
+                CurrentStarSystem.factions = theEvent.factions;
+
+                // Update station controlling faction data
+                foreach (Station station in CurrentStarSystem.stations)
+                {
+                    Faction stationFaction = theEvent.factions.FirstOrDefault(f => f.name == station.Faction.name);
+                    if (stationFaction != null)
+                    {
+                        station.Faction = stationFaction;
+                    }
+                }
+
+                // Check if current system is inhabited by or HQ for squadron faction
+                Faction squadronFaction = theEvent.factions.FirstOrDefault(f => f.squadronhomesystem || f.squadronfaction);
+                if (squadronFaction != null)
+                {
+                    updateSquadronData(squadronFaction);
+                }
             }
 
             if (theEvent.docked == true || theEvent.bodytype.ToLowerInvariant() == "station")
@@ -1286,10 +1303,27 @@ namespace Eddi
             };
             CurrentStarSystem.Faction = controllingFaction;
 
-            // Update squadron data, if available
+            // Update system faction data if available
             if (theEvent.factions != null)
             {
-                updateSquadronData(theEvent.factions);
+                CurrentStarSystem.factions = theEvent.factions;
+
+                // Update station controlling faction data
+                foreach (Station station in CurrentStarSystem.stations)
+                {
+                    Faction stationFaction = theEvent.factions.FirstOrDefault(f => f.name == station.Faction.name);
+                    if (stationFaction != null)
+                    {
+                        station.Faction = stationFaction;
+                    }
+                }
+
+                // Check if current system is inhabited by or HQ for squadron faction
+                Faction squadronFaction = theEvent.factions.FirstOrDefault(f => f.squadronhomesystem || f.squadronfaction);
+                if (squadronFaction != null)
+                {
+                    updateSquadronData(squadronFaction);
+                }
             }
 
             CurrentStarSystem.Economies = new List<Economy> { theEvent.Economy, theEvent.Economy2 };
@@ -2290,10 +2324,8 @@ namespace Eddi
             return configuration;
         }
 
-        public void updateSquadronData(List<Faction> factions)
+        public void updateSquadronData(Faction faction)
         {
-            // Check if current system is inhabited by or HQ for squadron faction
-            Faction faction = factions.FirstOrDefault(f => f.squadronhomesystem || f.squadronfaction);
             if (faction != null)
             {
                 EDDIConfiguration configuration = EDDIConfiguration.FromFile();
@@ -2360,7 +2392,6 @@ namespace Eddi
                         }
                     }
                 }
-
                 configuration.ToFile();
             }
         }

@@ -182,7 +182,7 @@ namespace EddiMissionMonitor
 
         public void PostHandle(Event @event)
         {
-            Logging.Debug("Received event " + JsonConvert.SerializeObject(@event));
+            Logging.Debug("Received post-event " + JsonConvert.SerializeObject(@event));
 
             // 'Post' handle events which remove a mission from the log
             if (@event is MissionAbandonedEvent)
@@ -204,7 +204,7 @@ namespace EddiMissionMonitor
 
         public void PreHandle(Event @event)
         {
-            Logging.Debug("Received event " + JsonConvert.SerializeObject(@event));
+            Logging.Debug("Received pre-event " + JsonConvert.SerializeObject(@event));
 
             // Handle the events that we care about
             if (@event is DataScannedEvent)
@@ -879,6 +879,37 @@ namespace EddiMissionMonitor
             writeMissions();
         }
 
+        public string AppendToRoute(string system)
+        {
+            StarSystem curr = EDDI.Instance?.CurrentStarSystem;
+            StarSystem dest = StarSystemSqLiteRepository.Instance.GetOrCreateStarSystem(system, true);
+
+            if (curr != null && dest != null && system != curr.name)
+            {
+                decimal distance = CalculateDistance(curr, dest);
+
+                if (!string.IsNullOrEmpty(missionsRouteList))
+                {
+                    List<string> route = missionsRouteList?.Split('_').ToList();
+                    route.Add(dest.name);
+                    missionsRouteList = string.Join("_", route);
+                    missionsRouteDistance += distance;
+                }
+                else
+                {
+                    missionsRouteList = dest.name;
+                    missionsRouteDistance = distance;
+                }
+            }
+            return dest.name;
+        }
+
+        public void CancelRoute()
+        {
+            missionsRouteList = string.Empty;
+            missionsRouteDistance = 0;
+        }
+
         public string GetExpiringRoute()
         {
             string expiringSystem = null;
@@ -1121,6 +1152,11 @@ namespace EddiMissionMonitor
             }
             EDDI.Instance.eventHandler(new MissionsRouteEvent(DateTime.Now, "nearest", nearestSystem, null, missionids.Count(), nearestDistance, 0, missionids));
             return nearestSystem;
+        }
+
+        public string GetNextSystem()
+        {
+            return missionsRouteList?.Split('_')[0];
         }
 
         public string GetMissionsRoute(string homesystem = null)
@@ -1439,6 +1475,19 @@ namespace EddiMissionMonitor
             }
             EDDI.Instance.eventHandler(new MissionsRouteEvent(DateTime.Now, "update", nextSystem, missionsRouteList, route.Count(), nextDistance, missionsRouteDistance, missionids));
             return nextSystem;
+        }
+
+        public decimal CalculateDistance(string currentSystem, string destinationSystem)
+        {
+            decimal distance = -1;
+            List<string> route = missionsRouteList?.Split('_').ToList();
+            if(route != null)
+            {
+                StarSystem curr = StarSystemSqLiteRepository.Instance.GetOrCreateStarSystem(currentSystem, true);
+                StarSystem dest = StarSystemSqLiteRepository.Instance.GetOrCreateStarSystem(route[0], true);
+                distance = CalculateDistance(curr, dest);
+            }
+            return distance;
         }
 
         private decimal CalculateDistance(StarSystem curr, StarSystem dest)

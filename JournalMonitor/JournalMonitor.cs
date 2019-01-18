@@ -209,6 +209,14 @@ namespace EddiJournalMonitor
                                     SecurityLevel security = SecurityLevel.FromEDName(JsonParsing.getString(data, "SystemSecurity") ?? "None");
                                     long? population = JsonParsing.getOptionalLong(data, "Population");
 
+                                    // Calculate remaining distance to route destination (if it exists)
+                                    decimal remainingDistance = 0;
+                                    string destination = ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetNextSystem();
+                                    if (!string.IsNullOrEmpty(destination))
+                                    {
+                                        remainingDistance = ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).CalculateDistance(systemName, destination);
+                                    }
+
                                     // Parse factions array data
                                     List<Faction> factions = new List<Faction>();
                                     data.TryGetValue("Factions", out object factionsVal);
@@ -217,7 +225,7 @@ namespace EddiJournalMonitor
                                         factions = getFactions(factionsVal);
                                     }
 
-                                    events.Add(new JumpedEvent(timestamp, systemName, systemAddress, x, y, z, starName, distance, fuelUsed, fuelRemaining, boostUsed, allegiance, faction, factionState, economy, economy2, government, security, population, factions) { raw = line, fromLoad = fromLogLoad });
+                                    events.Add(new JumpedEvent(timestamp, systemName, systemAddress, x, y, z, starName, distance, fuelUsed, fuelRemaining, boostUsed, allegiance, faction, factionState, economy, economy2, government, security, population, destination, remainingDistance, factions) { raw = line, fromLoad = fromLogLoad });
                                 }
                                 handled = true;
                                 break;

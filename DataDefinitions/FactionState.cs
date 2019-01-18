@@ -9,20 +9,22 @@
         {
             resourceManager = Properties.FactionStates.ResourceManager;
             resourceManager.IgnoreCase = false;
-            
-            var Retreat = new FactionState("Retreat");
-            var War = new FactionState("War");
-            var Lockdown = new FactionState("Lockdown");
+
+            var Boom = new FactionState("Boom");
+            var Bust = new FactionState("Bust");
             var CivilLiberty = new FactionState("CivilLiberty");
             var CivilUnrest = new FactionState("CivilUnrest");
             var CivilWar = new FactionState("CivilWar");
-            var Boom = new FactionState("Boom");
-            var Expansion = new FactionState("Expansion");
-            var Bust = new FactionState("Bust");
-            var Outbreak = new FactionState("Outbreak");
-            var Famine = new FactionState("Famine");
             var Election = new FactionState("Election");
+            var Expansion = new FactionState("Expansion");
+            var Famine = new FactionState("Famine");
+            var Incursion = new FactionState("Incursion");
             var Investment = new FactionState("Investment");
+            var Lockdown = new FactionState("Lockdown");
+            var Outbreak = new FactionState("Outbreak");
+            var PirateAttack = new FactionState("PirateAttack");
+            var Retreat = new FactionState("Retreat");
+            var War = new FactionState("War");
         }
 
         public static readonly FactionState None = new FactionState("None");

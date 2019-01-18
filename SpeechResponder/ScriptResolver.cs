@@ -655,6 +655,16 @@ namespace EddiSpeechResponder
                 }
                 switch (value)
                 {
+                    case "append":
+                        {
+                            result = ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).AppendToRoute(values[1].AsString);
+                        }
+                        break;
+                    case "cancel":
+                        {
+                            ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).CancelRoute();
+                        }
+                        break;
                     case "expiring":
                         {
                             result = ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetExpiringRoute();
