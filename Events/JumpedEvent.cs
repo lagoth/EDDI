@@ -31,7 +31,7 @@ namespace EddiEvents
             VARIABLES.Add("population", "The population of the system to which the commander has jumped");
             VARIABLES.Add("factions", "The factions in the system (this is a list of faction objects)");
             VARIABLES.Add("destination", "The route destination system, if any");
-            VARIABLES.Add("remainingdistance", "The remaining distance to the destination system)");
+            VARIABLES.Add("destdistance", "The distance to the destination system)");
         }
 
         public string system { get; private set; }
@@ -70,7 +70,7 @@ namespace EddiEvents
 
         public string destination { get; private set; }
 
-        public decimal remainingdistance { get; private set; }
+        public decimal destdistance { get; private set; }
 
         public List<Faction> factions { get; private set; }
 
@@ -83,7 +83,7 @@ namespace EddiEvents
         public SecurityLevel securityLevel { get; private set; } = SecurityLevel.None;
         public FactionState factionState { get; private set; } = FactionState.None;
 
-        public JumpedEvent(DateTime timestamp, string system, long systemAddress, decimal x, decimal y, decimal z, string star, decimal distance, decimal fuelused, decimal fuelremaining, int? boostUsed, Superpower allegiance, string faction, FactionState factionstate, Economy economy, Economy economy2, Government government, SecurityLevel security, long? population, string destination, decimal remainingdistance, List<Faction> factions) : base(timestamp, NAME)
+        public JumpedEvent(DateTime timestamp, string system, long systemAddress, decimal x, decimal y, decimal z, string star, decimal distance, decimal fuelused, decimal fuelremaining, int? boostUsed, Superpower allegiance, string faction, FactionState factionstate, Economy economy, Economy economy2, Government government, SecurityLevel security, long? population, string destination, decimal destdistance, List<Faction> factions) : base(timestamp, NAME)
         {
             this.system = system;
             this.systemAddress = systemAddress;
@@ -98,7 +98,7 @@ namespace EddiEvents
             this.Allegiance = (allegiance ?? Superpower.None);
             this.faction = faction;
             this.destination = destination;
-            this.remainingdistance = remainingdistance;
+            this.destdistance = destdistance;
             this.factionState = (factionstate ?? FactionState.None);
             this.Economy = (economy ?? Economy.None);
             this.Economy2 = (economy2 ?? Economy.None);

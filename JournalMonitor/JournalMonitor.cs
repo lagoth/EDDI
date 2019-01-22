@@ -210,11 +210,11 @@ namespace EddiJournalMonitor
                                     long? population = JsonParsing.getOptionalLong(data, "Population");
 
                                     // Calculate remaining distance to route destination (if it exists)
-                                    decimal remainingDistance = 0;
+                                    decimal destDistance = 0;
                                     string destination = ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetNextSystem();
                                     if (!string.IsNullOrEmpty(destination))
                                     {
-                                        remainingDistance = ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).CalculateDistance(systemName, destination);
+                                        destDistance = ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).CalculateDistance(systemName, destination);
                                     }
 
                                     // Parse factions array data
@@ -225,7 +225,7 @@ namespace EddiJournalMonitor
                                         factions = getFactions(factionsVal);
                                     }
 
-                                    events.Add(new JumpedEvent(timestamp, systemName, systemAddress, x, y, z, starName, distance, fuelUsed, fuelRemaining, boostUsed, allegiance, faction, factionState, economy, economy2, government, security, population, destination, remainingDistance, factions) { raw = line, fromLoad = fromLogLoad });
+                                    events.Add(new JumpedEvent(timestamp, systemName, systemAddress, x, y, z, starName, distance, fuelUsed, fuelRemaining, boostUsed, allegiance, faction, factionState, economy, economy2, government, security, population, destination, destDistance, factions) { raw = line, fromLoad = fromLogLoad });
                                 }
                                 handled = true;
                                 break;

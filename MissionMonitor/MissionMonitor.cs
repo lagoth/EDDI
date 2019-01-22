@@ -879,35 +879,11 @@ namespace EddiMissionMonitor
             writeMissions();
         }
 
-        public string AppendToRoute(string system)
-        {
-            StarSystem curr = EDDI.Instance?.CurrentStarSystem;
-            StarSystem dest = StarSystemSqLiteRepository.Instance.GetOrCreateStarSystem(system, true);
-
-            if (curr != null && dest != null && system != curr.name)
-            {
-                decimal distance = CalculateDistance(curr, dest);
-
-                if (!string.IsNullOrEmpty(missionsRouteList))
-                {
-                    List<string> route = missionsRouteList?.Split('_').ToList();
-                    route.Add(dest.name);
-                    missionsRouteList = string.Join("_", route);
-                    missionsRouteDistance += distance;
-                }
-                else
-                {
-                    missionsRouteList = dest.name;
-                    missionsRouteDistance = distance;
-                }
-            }
-            return dest.name;
-        }
-
         public void CancelRoute()
         {
             missionsRouteList = string.Empty;
             missionsRouteDistance = 0;
+            EDDI.Instance.eventHandler(new MissionsRouteEvent(DateTime.Now, "cancel", null, missionsRouteList, 0, 0, missionsRouteDistance, null));
         }
 
         public string GetExpiringRoute()
@@ -1154,11 +1130,6 @@ namespace EddiMissionMonitor
             return nearestSystem;
         }
 
-        public string GetNextSystem()
-        {
-            return missionsRouteList?.Split('_')[0];
-        }
-
         public string GetMissionsRoute(string homesystem = null)
         {
             // Missions Route Event variables
@@ -1363,6 +1334,31 @@ namespace EddiMissionMonitor
             return nextSystem;
         }
 
+        public string GetNextSystem()
+        {
+            return missionsRouteList?.Split('_')[0];
+        }
+
+        public string SetRoute(string system)
+        {
+            if (system != null)
+            {
+                StarSystem curr = EDDI.Instance?.CurrentStarSystem;
+                StarSystem dest = StarSystemSqLiteRepository.Instance.GetOrCreateStarSystem(system, true);
+
+                if (dest != null && system != curr.name)
+                {
+                    decimal distance = CalculateDistance(curr, dest);
+                    missionsRouteList = dest.name;
+                    missionsRouteDistance = distance;
+
+                    EDDI.Instance.eventHandler(new MissionsRouteEvent(DateTime.Now, "set", dest.name, dest.name, 0, distance, distance, null));
+                    return dest.name;
+                }
+            }
+            return null;
+        }
+
         public string UpdateMissionsRoute(string updateSystem = null)
         {
             // Misisons Route Event variables
@@ -1376,8 +1372,6 @@ namespace EddiMissionMonitor
 
             if (route.Count > 0)
             {
-                string homeSystem = route.Last();
-
                 if (updateSystem == null)
                 {
                     updateSystem = route[0];
@@ -1472,8 +1466,8 @@ namespace EddiMissionMonitor
                         missionsRouteDistance = 0;
                     }
                 }
+                EDDI.Instance.eventHandler(new MissionsRouteEvent(DateTime.Now, "update", nextSystem, missionsRouteList, route.Count(), nextDistance, missionsRouteDistance, missionids));
             }
-            EDDI.Instance.eventHandler(new MissionsRouteEvent(DateTime.Now, "update", nextSystem, missionsRouteList, route.Count(), nextDistance, missionsRouteDistance, missionids));
             return nextSystem;
         }
 

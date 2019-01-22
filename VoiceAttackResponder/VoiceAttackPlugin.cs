@@ -880,11 +880,6 @@ namespace EddiVoiceAttackResponder
                 string system = vaProxy.GetText("System variable");
                 switch (type)
                 {
-                    case "append":
-                        {
-                            ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).AppendToRoute(system);
-                        }
-                        break;
                     case "cancel":
                         {
                             ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).CancelRoute();
@@ -920,6 +915,11 @@ namespace EddiVoiceAttackResponder
                             {
                                 ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetMissionsRoute(system);
                             }
+                        }
+                        break;
+                    case "set":
+                        {
+                            ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).SetRoute(system);
                         }
                         break;
                     case "source":
