@@ -873,16 +873,7 @@ namespace Eddi
                 CurrentStarSystem.population = theEvent.population;
                 CurrentStarSystem.Economies = new List<Economy> { theEvent.Economy, theEvent.Economy2 };
                 CurrentStarSystem.securityLevel = theEvent.securityLevel;
-
-                // Faction data
-                Faction controllingFaction = new Faction
-                {
-                    name = theEvent.faction,
-                    Government = theEvent.Government,
-                    Allegiance = theEvent.Allegiance,
-                    FactionState = theEvent.factions?.FirstOrDefault(f => f.name == theEvent.faction)?.FactionState,
-                };
-                CurrentStarSystem.Faction = controllingFaction;
+                CurrentStarSystem.Faction = theEvent.controllingfaction;
             }
 
             // Update system faction data if available
@@ -1040,15 +1031,7 @@ namespace Eddi
             station.marketId = theEvent.marketId;
 
             // Information from the event might be more current than our data source so use it in preference
-
-            Faction controllingFaction = new Faction
-            {
-                name = theEvent.faction,
-                Allegiance = theEvent.Allegiance,
-                FactionState = theEvent.factionState,
-                Government = theEvent.Government
-            };
-            station.Faction = controllingFaction;
+            station.Faction = theEvent.controllingfaction;
             station.stationServices = theEvent.stationServices;
             station.economyShares = theEvent.economyShares;
 
@@ -1292,16 +1275,8 @@ namespace Eddi
             CurrentStarSystem.x = theEvent.x;
             CurrentStarSystem.y = theEvent.y;
             CurrentStarSystem.z = theEvent.z;
+            CurrentStarSystem.Faction = theEvent.controllingfaction;
             CurrentStellarBody = CurrentStarSystem.bodies.FirstOrDefault(b => b.name == theEvent.star);
-
-            Faction controllingFaction = new Faction
-            {
-                name = theEvent.faction,
-                Allegiance = theEvent.Allegiance,
-                Government = theEvent.Government,
-                FactionState = theEvent.factionState,
-            };
-            CurrentStarSystem.Faction = controllingFaction;
 
             // Update system faction data if available
             if (theEvent.factions != null)

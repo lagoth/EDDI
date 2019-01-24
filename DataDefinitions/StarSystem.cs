@@ -48,15 +48,14 @@ namespace EddiDataDefinitions
         public string power { get; set; }
         public string powerstate { get; set; }
 
-        [JsonIgnore, Obsolete("Please use Faction.FactionState instead")]
-        public string state => (Faction?.FactionState ?? FactionState.None).localizedName;
-
         // Faction details
         public Faction Faction { get; set; } = new Faction();
         public List<Faction> factions { get; set; }
 
         [JsonIgnore, Obsolete("Please use Faction instead")]
         public string faction => Faction.name;
+        [JsonIgnore, Obsolete("Please use Faction.FactionState instead")]
+        public string state => (Faction?.FactionState ?? FactionState.None).localizedName;
         [JsonIgnore, Obsolete("Please use Faction.Allegiance instead")]
         public string allegiance => Faction.allegiance;
         [JsonIgnore, Obsolete("Please use Faction.Government instead")]

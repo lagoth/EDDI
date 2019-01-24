@@ -64,53 +64,53 @@ namespace UnitTests
         public void TestJournalPlanetScan3()
         {
             string line = @"{
-        ""Atmosphere"": ""hot thick carbon dioxide atmosphere"",
-         ""AtmosphereComposition"": [
-            {
-                ""Name"": ""CarbonDioxide"",
-                 ""Percent"": 96.5
-            },
-             {
-                ""Name"": ""Nitrogen"",
-                 ""Percent"": 3.499999
-            }
-        ],
-         ""AtmosphereType"": ""CarbonDioxide"",
-         ""AxialTilt"": 3.094469,
-         ""BodyID"": 2,
-         ""BodyName"": ""Venus"",
-         ""Composition"": {
-            ""Ice"": 0.0,
-             ""Metal"": 0.3,
-             ""Rock"": 0.7
-        },
-         ""DistanceFromArrivalLS"": 360.959534,
-         ""Eccentricity"": 0.0067,
-         ""Landable"": false,
-         ""MassEM"": 0.815,
-         ""OrbitalInclination"": 3.395,
-         ""OrbitalPeriod"": 19414166.0,
-         ""Parents"": [
-            {
-                ""Star"": 0
-            }
-        ],
-         ""Periapsis"": 55.186001,
-         ""PlanetClass"": ""High metal content body"",
-         ""Radius"": 6051800.0,
-         ""RotationPeriod"": 20996798.0,
-         ""ScanType"": ""NavBeaconDetail"",
-         ""SemiMajorAxis"": 108207980544.0,
-         ""SurfaceGravity"": 8.869474,
-         ""SurfacePressure"": 9442427.0,
-         ""SurfaceTemperature"": 735.0,
-         ""SystemAddress"": 10477373803,
-         ""TerraformState"": """",
-         ""TidalLock"": true,
-         ""Volcanism"": ""minor rocky magma volcanism"",
-         ""event"": ""Scan"",
-         ""timestamp"": ""2018-09-03T19:07:54Z""
-    }";
+                ""Atmosphere"": ""hot thick carbon dioxide atmosphere"",
+                ""AtmosphereComposition"": [
+                    {
+                        ""Name"": ""CarbonDioxide"",
+                        ""Percent"": 96.5
+                    },
+                    {
+                        ""Name"": ""Nitrogen"",
+                        ""Percent"": 3.499999
+                    }
+                ],
+                ""AtmosphereType"": ""CarbonDioxide"",
+                ""AxialTilt"": 3.094469,
+                ""BodyID"": 2,
+                ""BodyName"": ""Venus"",
+                ""Composition"": {
+                    ""Ice"": 0.0,
+                    ""Metal"": 0.3,
+                    ""Rock"": 0.7
+                },
+                ""DistanceFromArrivalLS"": 360.959534,
+                ""Eccentricity"": 0.0067,
+                ""Landable"": false,
+                ""MassEM"": 0.815,
+                ""OrbitalInclination"": 3.395,
+                 ""OrbitalPeriod"": 19414166.0,
+                ""Parents"": [
+                    {
+                        ""Star"": 0
+                    }
+                ],
+                ""Periapsis"": 55.186001,
+                ""PlanetClass"": ""High metal content body"",
+                ""Radius"": 6051800.0,
+                ""RotationPeriod"": 20996798.0,
+                ""ScanType"": ""NavBeaconDetail"",
+                ""SemiMajorAxis"": 108207980544.0,
+                ""SurfaceGravity"": 8.869474,
+                ""SurfacePressure"": 9442427.0,
+                ""SurfaceTemperature"": 735.0,
+                ""SystemAddress"": 10477373803,
+                ""TerraformState"": """",
+                ""TidalLock"": true,
+                ""Volcanism"": ""minor rocky magma volcanism"",
+                ""event"": ""Scan"",
+                ""timestamp"": ""2018-09-03T19:07:54Z""
+            }";
 
             List<Event> events = JournalMonitor.ParseJournalEntry(line);
             Assert.IsTrue(events.Count == 1);
@@ -195,7 +195,7 @@ namespace UnitTests
         [TestMethod]
         public void TestJournalDocked1()
         {
-            string line = @"{ ""timestamp"":""2017-04-14T19:34:32Z"",""event"":""Docked"",""StationName"":""Freeholm"",""StationType"":""AsteroidBase"",""StarSystem"":""Artemis"",""StationFaction"":""Artemis Empire Assembly"",""FactionState"":""Boom"",""StationGovernment"":""$government_Patronage;"",""StationGovernment_Localised"":""Patronage"",""StationAllegiance"":""Empire"",""StationEconomy"":""$economy_Industrial;"",""StationEconomy_Localised"":""Industrial"", ""StationEconomies"": [ { ""Name"": ""$economy_Industrial;"", ""Proportion"": 0.7 }, { ""Name"": ""$economy_Extraction;"", ""Proportion"": 0.3 } ], ""DistFromStarLS"":2527.211914,""StationServices"":[""Refuel""], ""MarketID"": 128169720, ""SystemAddress"": 3107509474002}";
+            string line = @"{ ""timestamp"":""2017-04-14T19:34:32Z"", ""event"":""Docked"", ""StationName"":""Freeholm"", ""StationType"":""AsteroidBase"", ""StarSystem"":""Artemis"", ""StationFaction"":{ ""Name"":""Artemis Empire Assembly"", ""FactionState"":""Boom"" }, ""StationGovernment"":""$government_Patronage;"", ""StationGovernment_Localised"":""Patronage"", ""StationAllegiance"":""Empire"", ""StationEconomy"":""$economy_Industrial;"", ""StationEconomy_Localised"":""Industrial"", ""StationEconomies"": [ { ""Name"": ""$economy_Industrial;"", ""Proportion"": 0.7 }, { ""Name"": ""$economy_Extraction;"", ""Proportion"": 0.3 } ], ""DistFromStarLS"":2527.211914, ""StationServices"":[""Refuel""], ""MarketID"": 128169720, ""SystemAddress"": 3107509474002 }";
             List<Event> events = JournalMonitor.ParseJournalEntry(line);
             Assert.IsTrue(events.Count == 1);
 
@@ -217,7 +217,7 @@ namespace UnitTests
         [TestMethod]
         public void TestJournalDocked2()
         {
-            string line = @"{ ""timestamp"":""2018-04-01T05:21:24Z"", ""event"":""Docked"", ""StationName"":""Donaldson"", ""StationType"":""Orbis"", ""StarSystem"":""Alioth"", ""SystemAddress"":1109989017963, ""MarketID"":128141048, ""StationFaction"":""Alioth Pro-Alliance Group"", ""FactionState"":""Boom"", ""StationGovernment"":""$government_Democracy;"", ""StationGovernment_Localised"":""Democracy"", ""StationAllegiance"":""Alliance"", ""StationServices"":[ ""Dock"", ""Autodock"", ""BlackMarket"", ""Commodities"", ""Contacts"", ""Exploration"", ""Missions"", ""Outfitting"", ""CrewLounge"", ""Rearm"", ""Refuel"", ""Repair"", ""Shipyard"", ""Tuning"", ""Workshop"", ""MissionsGenerated"", ""FlightController"", ""StationOperations"", ""Powerplay"", ""SearchAndRescue"" ], ""StationEconomy"":""$economy_Service;"", ""StationEconomy_Localised"":""Service"", ""StationEconomies"":[ { ""Name"":""$economy_Service;"", ""Name_Localised"":""Service"", ""Proportion"":1.000000 } ], ""DistFromStarLS"":4632.417480 }";
+            string line = @"{ ""timestamp"":""2018-04-01T05:21:24Z"", ""event"":""Docked"", ""StationName"":""Donaldson"", ""StationType"":""Orbis"", ""StarSystem"":""Alioth"", ""SystemAddress"":1109989017963, ""MarketID"":128141048, ""StationFaction"":{ ""Name"":""Alioth Pro-Alliance Grou"", ""FactionState"":""Boom"" }, ""StationGovernment"":""$government_Democracy;"", ""StationGovernment_Localised"":""Democracy"", ""StationAllegiance"":""Alliance"", ""StationServices"":[ ""Dock"", ""Autodock"", ""BlackMarket"", ""Commodities"", ""Contacts"", ""Exploration"", ""Missions"", ""Outfitting"", ""CrewLounge"", ""Rearm"", ""Refuel"", ""Repair"", ""Shipyard"", ""Tuning"", ""Workshop"", ""MissionsGenerated"", ""FlightController"", ""StationOperations"", ""Powerplay"", ""SearchAndRescue"" ], ""StationEconomy"":""$economy_Service;"", ""StationEconomy_Localised"":""Service"", ""StationEconomies"":[ { ""Name"":""$economy_Service;"", ""Name_Localised"":""Service"", ""Proportion"":1.000000 } ], ""DistFromStarLS"":4632.417480 }";
             List<Event> events = JournalMonitor.ParseJournalEntry(line);
             Assert.IsTrue(events.Count == 1);
 
@@ -226,7 +226,7 @@ namespace UnitTests
             Assert.AreEqual("Orbis", theEvent.stationModel.edname);
             Assert.AreEqual("Donaldson", theEvent.station);
             Assert.AreEqual("Alioth", theEvent.system);
-            Assert.AreEqual("Boom", theEvent.factionState.invariantName);
+            Assert.AreEqual("Boom", theEvent.FactionState.invariantName);
             Assert.AreEqual("Democracy", theEvent.Government.invariantName);
             Assert.AreEqual("Alliance", theEvent.Allegiance.invariantName);
             Assert.AreEqual(20, theEvent.stationservices.Count);
@@ -464,88 +464,90 @@ namespace UnitTests
         public void TestJournalJumpedEvent()
         {
             string line = @"{
-	        ""timestamp"": ""2018-08-08T06: 56: 20Z"",
-	        ""event"": ""FSDJump"",
-	        ""StarSystem"": ""Diaguandri"",
-        	""SystemAddress"": 670417429889,
-	        ""StarPos"": [-41.06250, -62.15625, -103.25000],
-	        ""SystemAllegiance"": ""Independent"",
-	        ""SystemEconomy"": ""$economy_HighTech;"",
-	        ""SystemEconomy_Localised"": ""HighTech"",
-	        ""SystemSecondEconomy"": ""$economy_Refinery;"",
-	        ""SystemSecondEconomy_Localised"": ""Refinery"",
-	        ""SystemGovernment"": ""$government_Democracy;"",
-	        ""SystemGovernment_Localised"": ""Democracy"",
-	        ""SystemSecurity"": ""$SYSTEM_SECURITY_medium;"",
-	        ""SystemSecurity_Localised"": ""MediumSecurity"",
-	        ""Population"": 10303479,
-	        ""JumpDist"": 19.340,
-	        ""FuelUsed"": 2.218082,
-	        ""FuelLevel"": 23.899260,
-	        ""Factions"": [{
-		        ""Name"": ""DiaguandriInterstellar"",
-		        ""FactionState"": ""Boom"",
-		        ""Government"": ""Corporate"",
-		        ""Influence"": 0.100398,
-		        ""Allegiance"": ""Independent""
-	        },
-	        {
-		        ""Name"": ""People'sMET20Liberals"",
-		        ""FactionState"": ""Boom"",
-		        ""Government"": ""Democracy"",
-		        ""Influence"": 0.123260,
-		        ""Allegiance"": ""Federation""
-	        },
-	        {
-		        ""Name"": ""PilotsFederationLocalBranch"",
-		        ""FactionState"": ""None"",
-		        ""Government"": ""Democracy"",
-		        ""Influence"": 0.000000,
-		        ""Allegiance"": ""PilotsFederation""
-	        },
-	        {
-		        ""Name"": ""NaturalDiaguandriRegulatoryState"",
-		        ""FactionState"": ""None"",
-		        ""Government"": ""Dictatorship"",
-		        ""Influence"": 0.020875,
-		        ""Allegiance"": ""Independent"",
-		        ""RecoveringStates"": [{""State"": ""CivilWar"", ""Trend"": 0}]
-	        },
-	        {
-		        ""Name"": ""CartelofDiaguandri"",
-		        ""FactionState"": ""None"",
-		        ""Government"": ""Anarchy"",
-		        ""Influence"": 0.009940,
-		        ""Allegiance"": ""Independent"",
-		        ""PendingStates"": [{""State"": ""Bust"", ""Trend"": 0}, {""State"": ""CivilUnrest"", ""Trend"": 1}],
-		        ""RecoveringStates"": [{""State"": ""CivilWar"", ""Trend"": 0}]
-	        },
-	        {
-		        ""Name"": ""RevolutionaryPartyofDiaguandri"",
-		        ""FactionState"": ""None"",
-		        ""Government"": ""Democracy"",
-		        ""Influence"": 0.124254,
-		        ""Allegiance"": ""Federation"",
-		        ""PendingStates"": [{""State"": ""Boom"", ""Trend"": 1}, {""State"": ""Bust"", ""Trend"": 1}]
-	        },
-	        {
-		        ""Name"": ""TheBrotherhoodoftheDarkCircle"",
-		        ""FactionState"": ""None"",
-		        ""Government"": ""Corporate"",
-		        ""Influence"": 0.093439,
-		        ""Allegiance"": ""Independent"",
-		        ""RecoveringStates"": [{""State"": ""CivilUnrest"", ""Trend"": 1}]
-            },
-            {
-		        ""Name"": ""EXO"",
-		        ""FactionState"": ""Expansion"",
-		        ""Government"": ""Democracy"",
-		        ""Influence"": 0.527833,
-		        ""Allegiance"": ""Independent"",
-		        ""PendingStates"": [{""State"": ""Boom"", ""Trend"": 1}]
-	        }],
-	        ""SystemFaction"": ""EXO"",
-	        ""FactionState"": ""Expansion""
+	            ""timestamp"": ""2018-08-08T06: 56: 20Z"",
+	            ""event"": ""FSDJump"",
+	            ""StarSystem"": ""Diaguandri"",
+        	    ""SystemAddress"": 670417429889,
+	            ""StarPos"": [-41.06250, -62.15625, -103.25000],
+	            ""SystemAllegiance"": ""Independent"",
+	            ""SystemEconomy"": ""$economy_HighTech;"",
+	            ""SystemEconomy_Localised"": ""HighTech"",
+	            ""SystemSecondEconomy"": ""$economy_Refinery;"",
+	            ""SystemSecondEconomy_Localised"": ""Refinery"",
+	            ""SystemGovernment"": ""$government_Democracy;"",
+	            ""SystemGovernment_Localised"": ""Democracy"",
+	            ""SystemSecurity"": ""$SYSTEM_SECURITY_medium;"",
+	            ""SystemSecurity_Localised"": ""MediumSecurity"",
+	            ""Population"": 10303479,
+	            ""JumpDist"": 19.340,
+	            ""FuelUsed"": 2.218082,
+	            ""FuelLevel"": 23.899260,
+	            ""Factions"": [{
+		            ""Name"": ""DiaguandriInterstellar"",
+		            ""FactionState"": ""Boom"",
+		            ""Government"": ""Corporate"",
+		            ""Influence"": 0.100398,
+		            ""Allegiance"": ""Independent""
+	            },
+	            {
+		            ""Name"": ""People'sMET20Liberals"",
+		            ""FactionState"": ""Boom"",
+		            ""Government"": ""Democracy"",
+		            ""Influence"": 0.123260,
+		            ""Allegiance"": ""Federation""
+	            },
+	            {
+		            ""Name"": ""PilotsFederationLocalBranch"",
+		            ""FactionState"": ""None"",
+		            ""Government"": ""Democracy"",
+		            ""Influence"": 0.000000,
+		            ""Allegiance"": ""PilotsFederation""
+	            },
+	            {
+		            ""Name"": ""NaturalDiaguandriRegulatoryState"",
+		            ""FactionState"": ""None"",
+		            ""Government"": ""Dictatorship"",
+		            ""Influence"": 0.020875,
+		            ""Allegiance"": ""Independent"",
+		            ""RecoveringStates"": [{""State"": ""CivilWar"", ""Trend"": 0}]
+	            },
+	            {
+		            ""Name"": ""CartelofDiaguandri"",
+		            ""FactionState"": ""None"",
+		            ""Government"": ""Anarchy"",
+		            ""Influence"": 0.009940,
+		            ""Allegiance"": ""Independent"",
+		            ""PendingStates"": [{""State"": ""Bust"", ""Trend"": 0}, {""State"": ""CivilUnrest"", ""Trend"": 1}],
+		            ""RecoveringStates"": [{""State"": ""CivilWar"", ""Trend"": 0}]
+	            },
+	            {
+		            ""Name"": ""RevolutionaryPartyofDiaguandri"",
+		            ""FactionState"": ""None"",
+		            ""Government"": ""Democracy"",
+		            ""Influence"": 0.124254,
+		            ""Allegiance"": ""Federation"",
+		            ""PendingStates"": [{""State"": ""Boom"", ""Trend"": 1}, {""State"": ""Bust"", ""Trend"": 1}]
+	            },
+	            {
+		            ""Name"": ""TheBrotherhoodoftheDarkCircle"",
+		            ""FactionState"": ""None"",
+		            ""Government"": ""Corporate"",
+		            ""Influence"": 0.093439,
+		            ""Allegiance"": ""Independent"",
+		            ""RecoveringStates"": [{""State"": ""CivilUnrest"", ""Trend"": 1}]
+                },
+                {
+		            ""Name"": ""EXO"",
+		            ""FactionState"": ""Expansion"",
+		            ""Government"": ""Democracy"",
+		            ""Influence"": 0.527833,
+		            ""Allegiance"": ""Independent"",
+		            ""PendingStates"": [{""State"": ""Boom"", ""Trend"": 1}]
+	            }],
+                ""SystemFaction"": {
+		            ""Name"": ""EXO"",
+		            ""FactionState"": ""Expansion""
+	            }
             }";
 
             List<Event> events = JournalMonitor.ParseJournalEntry(line);
@@ -635,108 +637,111 @@ namespace UnitTests
         public void TestJournalLocationEvent()
         {
             string line = @"{
-	""timestamp"": ""2018-08-12T02: 52: 13Z"",
-	""event"": ""Location"",
-	""Docked"": true,
-	""MarketID"": 3223343616,
-	""StationName"": ""RayGateway"",
-	""StationType"": ""Coriolis"",
-	""StarSystem"": ""Diaguandri"",
-	""SystemAddress"": 670417429889,
-	""StarPos"": [-41.06250,
-	-62.15625,
-	-103.25000],
-	""SystemAllegiance"": ""Independent"",
-	""SystemEconomy"": ""$economy_HighTech;"",
-	""SystemEconomy_Localised"": ""HighTech"",
-	""SystemSecondEconomy"": ""$economy_Refinery;"",
-	""SystemSecondEconomy_Localised"": ""Refinery"",
-	""SystemGovernment"": ""$government_Democracy;"",
-	""SystemGovernment_Localised"": ""Democracy"",
-	""SystemSecurity"": ""$SYSTEM_SECURITY_medium;"",
-	""SystemSecurity_Localised"": ""MediumSecurity"",
-	""Population"": 10303479,
-	""Body"": ""RayGateway"",
-	""BodyID"": 32,
-	""BodyType"": ""Station"",
-	""Factions"": [{
-		""Name"": ""DiaguandriInterstellar"",
-		""FactionState"": ""None"",
-		""Government"": ""Corporate"",
-		""Influence"": 0.090000,
-		""Allegiance"": ""Independent"",
-		""RecoveringStates"": [{
-			""State"": ""Boom"",
-			""Trend"": 0
-		}]
-	},
-	{
-		""Name"": ""People'sMET20Liberals"",
-		""FactionState"": ""Boom"",
-		""Government"": ""Democracy"",
-		""Influence"": 0.206000,
-		""Allegiance"": ""Federation""
-	},
-	{
-		""Name"": ""PilotsFederationLocalBranch"",
-		""FactionState"": ""None"",
-		""Government"": ""Democracy"",
-		""Influence"": 0.000000,
-		""Allegiance"": ""PilotsFederation""
-	},
-	{
-		""Name"": ""NaturalDiaguandriRegulatoryState"",
-		""FactionState"": ""Boom"",
-		""Government"": ""Dictatorship"",
-		""Influence"": 0.072000,
-		""Allegiance"": ""Independent""
-	},
-	{
-		""Name"": ""CartelofDiaguandri"",
-		""FactionState"": ""Bust"",
-		""Government"": ""Anarchy"",
-		""Influence"": 0.121000,
-		""Allegiance"": ""Independent"",
-		""PendingStates"": [{
-			""State"": ""Boom"",
-			""Trend"": 1
-		},
-		{
-			""State"": ""CivilUnrest"",
-			""Trend"": -1
-		}]
-	},
-	{
-		""Name"": ""RevolutionaryPartyofDiaguandri"",
-		""FactionState"": ""Boom"",
-		""Government"": ""Democracy"",
-		""Influence"": 0.181000,
-		""Allegiance"": ""Federation"",
-		""PendingStates"": [{
-			""State"": ""Bust"",
-			""Trend"": 0
-		}]
-	},
-	{
-		""Name"": ""TheBrotherhoodoftheDarkCircle"",
-		""FactionState"": ""Boom"",
-		""Government"": ""Corporate"",
-		""Influence"": 0.086000,
-		""Allegiance"": ""Independent""
-	},
-	{
-		""Name"": ""EXO"",
-		""FactionState"": ""None"",
-		""Government"": ""Democracy"",
-		""Influence"": 0.244000,
-		""Allegiance"": ""Independent"",
-		""PendingStates"": [{
-			""State"": ""Boom"",
-			""Trend"": 1
-		}]
-	}],
-	""SystemFaction"": ""EXO""
-}";
+                ""timestamp"": ""2018-08-12T02: 52: 13Z"",
+	            ""event"": ""Location"",
+	            ""Docked"": true,
+	            ""MarketID"": 3223343616,
+	            ""StationName"": ""RayGateway"",
+	            ""StationType"": ""Coriolis"",
+	            ""StarSystem"": ""Diaguandri"",
+	            ""SystemAddress"": 670417429889,
+	            ""StarPos"": [-41.06250,
+	            -62.15625,
+	            -103.25000],
+	            ""SystemAllegiance"": ""Independent"",
+	            ""SystemEconomy"": ""$economy_HighTech;"",
+    	        ""SystemEconomy_Localised"": ""HighTech"",
+    	        ""SystemSecondEconomy"": ""$economy_Refinery;"",
+	            ""SystemSecondEconomy_Localised"": ""Refinery"",
+	            ""SystemGovernment"": ""$government_Democracy;"",
+	            ""SystemGovernment_Localised"": ""Democracy"",
+	            ""SystemSecurity"": ""$SYSTEM_SECURITY_medium;"",
+	            ""SystemSecurity_Localised"": ""MediumSecurity"",
+	            ""Population"": 10303479,
+	            ""Body"": ""RayGateway"",
+	            ""BodyID"": 32,
+	            ""BodyType"": ""Station"",
+	            ""Factions"": [{
+		            ""Name"": ""DiaguandriInterstellar"",
+		            ""FactionState"": ""None"",
+		            ""Government"": ""Corporate"",
+		            ""Influence"": 0.090000,
+		            ""Allegiance"": ""Independent"",
+		            ""RecoveringStates"": [{
+			            ""State"": ""Boom"",
+			            ""Trend"": 0
+		            }]
+	            },
+	            {
+		            ""Name"": ""People'sMET20Liberals"",
+		            ""FactionState"": ""Boom"",
+		            ""Government"": ""Democracy"",
+		            ""Influence"": 0.206000,
+		         ""Allegiance"": ""Federation""
+	            },
+	            {
+		            ""Name"": ""PilotsFederationLocalBranch"",
+		            ""FactionState"": ""None"",
+		            ""Government"": ""Democracy"",
+		            ""Influence"": 0.000000,
+		            ""Allegiance"": ""PilotsFederation""
+	            },
+	            {
+		            ""Name"": ""NaturalDiaguandriRegulatoryState"",
+		            ""FactionState"": ""Boom"",
+		            ""Government"": ""Dictatorship"",
+		            ""Influence"": 0.072000,
+		            ""Allegiance"": ""Independent""
+	            },
+	            {
+		            ""Name"": ""CartelofDiaguandri"",
+		            ""FactionState"": ""Bust"",
+		            ""Government"": ""Anarchy"",
+		            ""Influence"": 0.121000,
+		            ""Allegiance"": ""Independent"",
+		            ""PendingStates"": [{
+			            ""State"": ""Boom"",
+			            ""Trend"": 1
+		            },
+		            {
+			            ""State"": ""CivilUnrest"",
+			            ""Trend"": -1
+		            }]
+	            },
+	            {
+		            ""Name"": ""RevolutionaryPartyofDiaguandri"",
+		            ""FactionState"": ""Boom"",
+		            ""Government"": ""Democracy"",
+		            ""Influence"": 0.181000,
+		            ""Allegiance"": ""Federation"",
+		            ""PendingStates"": [{
+			            ""State"": ""Bust"",
+			            ""Trend"": 0
+		            }]
+	            },
+	            {
+		            ""Name"": ""TheBrotherhoodoftheDarkCircle"",
+		            ""FactionState"": ""Boom"",
+		            ""Government"": ""Corporate"",
+		            ""Influence"": 0.086000,
+		            ""Allegiance"": ""Independent""
+	            },
+	            {
+		            ""Name"": ""EXO"",
+		            ""FactionState"": ""None"",
+		            ""Government"": ""Democracy"",
+		            ""Influence"": 0.244000,
+		            ""Allegiance"": ""Independent"",
+		            ""PendingStates"": [{
+			            ""State"": ""Boom"",
+			            ""Trend"": 1
+		            }]
+	            }],
+	            ""SystemFaction"": {
+		            ""Name"": ""EXO"",
+		            ""FactionState"": ""None""
+	            }
+            }";
 
             List<Event> events = JournalMonitor.ParseJournalEntry(line);
             Assert.IsTrue(events.Count == 1);
@@ -905,7 +910,7 @@ namespace UnitTests
         [TestMethod]
         public void TestJumpEvent3()
         {
-            string line = "{ \"timestamp\":\"2018-12-25T20:07:06Z\", \"event\":\"FSDJump\", \"StarSystem\":\"LHS 20\", \"SystemAddress\":33656303199641, \"StarPos\":[11.18750,-37.37500,-31.84375], \"SystemAllegiance\":\"Federation\", \"SystemEconomy\":\"$economy_HighTech;\", \"SystemEconomy_Localised\":\"High Tech\", \"SystemSecondEconomy\":\"$economy_Refinery;\", \"SystemSecondEconomy_Localised\":\"Refinery\", \"SystemGovernment\":\"$government_Democracy;\", \"SystemGovernment_Localised\":\"Democracy\", \"SystemSecurity\":\"$SYSTEM_SECURITY_medium;\", \"SystemSecurity_Localised\":\"Medium Security\", \"Population\":9500553, \"JumpDist\":20.361, \"FuelUsed\":3.065896, \"FuelLevel\":19.762932, \"Factions\":[ { \"Name\":\"Pilots Federation Local Branch\", \"FactionState\":\"None\", \"Government\":\"Democracy\", \"Influence\":0.000000, \"Allegiance\":\"PilotsFederation\", \"Happiness\":\"\", \"MyReputation\":6.106290 }, { \"Name\":\"Shenetserii Confederation\", \"FactionState\":\"None\", \"Government\":\"Confederacy\", \"Influence\":0.127000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":18.809999, \"PendingStates\":[ { \"State\":\"War\", \"Trend\":0 } ] }, { \"Name\":\"LHS 20 Company\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.127000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":4.950000, \"PendingStates\":[ { \"State\":\"War\", \"Trend\":0 } ] }, { \"Name\":\"Traditional LHS 20 Defence Party\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.087000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":2.640000 }, { \"Name\":\"Movement for LHS 20 Liberals\", \"FactionState\":\"CivilWar\", \"Government\":\"Democracy\", \"Influence\":0.226000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"SquadronFaction\":true, \"HomeSystem\":true, \"MyReputation\":100.000000, \"ActiveStates\":[ { \"State\":\"CivilLiberty\" }, { \"State\":\"Investment\" }, { \"State\":\"CivilWar\" } ] }, { \"Name\":\"Nationalists of LHS 20\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.105000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":0.000000 }, { \"Name\":\"LHS 20 Organisation\", \"FactionState\":\"CivilWar\", \"Government\":\"Anarchy\", \"Influence\":0.166000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":5.940000, \"ActiveStates\":[ { \"State\":\"CivilWar\" } ] }, { \"Name\":\"LHS 20 Engineers\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.162000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":15.000000 } ], \"SystemFaction\":\"Movement for LHS 20 Liberals\", \"FactionState\":\"CivilWar\" }";
+            string line = "{ \"timestamp\":\"2018-12-25T20:07:06Z\", \"event\":\"FSDJump\", \"StarSystem\":\"LHS 20\", \"SystemAddress\":33656303199641, \"StarPos\":[11.18750,-37.37500,-31.84375], \"SystemAllegiance\":\"Federation\", \"SystemEconomy\":\"$economy_HighTech;\", \"SystemEconomy_Localised\":\"High Tech\", \"SystemSecondEconomy\":\"$economy_Refinery;\", \"SystemSecondEconomy_Localised\":\"Refinery\", \"SystemGovernment\":\"$government_Democracy;\", \"SystemGovernment_Localised\":\"Democracy\", \"SystemSecurity\":\"$SYSTEM_SECURITY_medium;\", \"SystemSecurity_Localised\":\"Medium Security\", \"Population\":9500553, \"JumpDist\":20.361, \"FuelUsed\":3.065896, \"FuelLevel\":19.762932, \"Factions\":[ { \"Name\":\"Pilots Federation Local Branch\", \"FactionState\":\"None\", \"Government\":\"Democracy\", \"Influence\":0.000000, \"Allegiance\":\"PilotsFederation\", \"Happiness\":\"\", \"MyReputation\":6.106290 }, { \"Name\":\"Shenetserii Confederation\", \"FactionState\":\"None\", \"Government\":\"Confederacy\", \"Influence\":0.127000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":18.809999, \"PendingStates\":[ { \"State\":\"War\", \"Trend\":0 } ] }, { \"Name\":\"LHS 20 Company\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.127000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":4.950000, \"PendingStates\":[ { \"State\":\"War\", \"Trend\":0 } ] }, { \"Name\":\"Traditional LHS 20 Defence Party\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.087000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":2.640000 }, { \"Name\":\"Movement for LHS 20 Liberals\", \"FactionState\":\"CivilWar\", \"Government\":\"Democracy\", \"Influence\":0.226000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"SquadronFaction\":true, \"HomeSystem\":true, \"MyReputation\":100.000000, \"ActiveStates\":[ { \"State\":\"CivilLiberty\" }, { \"State\":\"Investment\" }, { \"State\":\"CivilWar\" } ] }, { \"Name\":\"Nationalists of LHS 20\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.105000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":0.000000 }, { \"Name\":\"LHS 20 Organisation\", \"FactionState\":\"CivilWar\", \"Government\":\"Anarchy\", \"Influence\":0.166000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":5.940000, \"ActiveStates\":[ { \"State\":\"CivilWar\" } ] }, { \"Name\":\"LHS 20 Engineers\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.162000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":15.000000 } ], \"SystemFaction\":{ \"Name\":\"Movement for LHS 20 Liberals\", \"FactionState\":\"CivilWar\" } }";
             List<Event> events = JournalMonitor.ParseJournalEntry(line);
             Assert.AreEqual(1, events.Count);
             JumpedEvent @event = (JumpedEvent)events[0];
@@ -920,7 +925,7 @@ namespace UnitTests
         [TestMethod]
         public void TestJournalJumpEventHandler()
         {
-            string line = "{ \"timestamp\":\"2018-12-25T20:07:06Z\", \"event\":\"FSDJump\", \"StarSystem\":\"LHS 20\", \"SystemAddress\":33656303199641, \"StarPos\":[11.18750,-37.37500,-31.84375], \"SystemAllegiance\":\"Federation\", \"SystemEconomy\":\"$economy_HighTech;\", \"SystemEconomy_Localised\":\"High Tech\", \"SystemSecondEconomy\":\"$economy_Refinery;\", \"SystemSecondEconomy_Localised\":\"Refinery\", \"SystemGovernment\":\"$government_Democracy;\", \"SystemGovernment_Localised\":\"Democracy\", \"SystemSecurity\":\"$SYSTEM_SECURITY_medium;\", \"SystemSecurity_Localised\":\"Medium Security\", \"Population\":9500553, \"JumpDist\":20.361, \"FuelUsed\":3.065896, \"FuelLevel\":19.762932, \"Factions\":[ { \"Name\":\"Pilots Federation Local Branch\", \"FactionState\":\"None\", \"Government\":\"Democracy\", \"Influence\":0.000000, \"Allegiance\":\"PilotsFederation\", \"Happiness\":\"\", \"MyReputation\":6.106290 }, { \"Name\":\"Shenetserii Confederation\", \"FactionState\":\"None\", \"Government\":\"Confederacy\", \"Influence\":0.127000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":18.809999, \"PendingStates\":[ { \"State\":\"War\", \"Trend\":0 } ] }, { \"Name\":\"LHS 20 Company\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.127000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":4.950000, \"PendingStates\":[ { \"State\":\"War\", \"Trend\":0 } ] }, { \"Name\":\"Traditional LHS 20 Defence Party\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.087000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":2.640000 }, { \"Name\":\"Movement for LHS 20 Liberals\", \"FactionState\":\"CivilWar\", \"Government\":\"Democracy\", \"Influence\":0.226000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"SquadronFaction\":true, \"HomeSystem\":true, \"MyReputation\":100.000000, \"ActiveStates\":[ { \"State\":\"CivilLiberty\" }, { \"State\":\"Investment\" }, { \"State\":\"CivilWar\" } ] }, { \"Name\":\"Nationalists of LHS 20\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.105000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":0.000000 }, { \"Name\":\"LHS 20 Organisation\", \"FactionState\":\"CivilWar\", \"Government\":\"Anarchy\", \"Influence\":0.166000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":5.940000, \"ActiveStates\":[ { \"State\":\"CivilWar\" } ] }, { \"Name\":\"LHS 20 Engineers\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.162000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":15.000000 } ], \"SystemFaction\":\"Movement for LHS 20 Liberals\", \"FactionState\":\"CivilWar\" }";
+            string line = "{ \"timestamp\":\"2018-12-25T20:07:06Z\", \"event\":\"FSDJump\", \"StarSystem\":\"LHS 20\", \"SystemAddress\":33656303199641, \"StarPos\":[11.18750,-37.37500,-31.84375], \"SystemAllegiance\":\"Federation\", \"SystemEconomy\":\"$economy_HighTech;\", \"SystemEconomy_Localised\":\"High Tech\", \"SystemSecondEconomy\":\"$economy_Refinery;\", \"SystemSecondEconomy_Localised\":\"Refinery\", \"SystemGovernment\":\"$government_Democracy;\", \"SystemGovernment_Localised\":\"Democracy\", \"SystemSecurity\":\"$SYSTEM_SECURITY_medium;\", \"SystemSecurity_Localised\":\"Medium Security\", \"Population\":9500553, \"JumpDist\":20.361, \"FuelUsed\":3.065896, \"FuelLevel\":19.762932, \"Factions\":[ { \"Name\":\"Pilots Federation Local Branch\", \"FactionState\":\"None\", \"Government\":\"Democracy\", \"Influence\":0.000000, \"Allegiance\":\"PilotsFederation\", \"Happiness\":\"\", \"MyReputation\":6.106290 }, { \"Name\":\"Shenetserii Confederation\", \"FactionState\":\"None\", \"Government\":\"Confederacy\", \"Influence\":0.127000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":18.809999, \"PendingStates\":[ { \"State\":\"War\", \"Trend\":0 } ] }, { \"Name\":\"LHS 20 Company\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.127000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":4.950000, \"PendingStates\":[ { \"State\":\"War\", \"Trend\":0 } ] }, { \"Name\":\"Traditional LHS 20 Defence Party\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.087000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":2.640000 }, { \"Name\":\"Movement for LHS 20 Liberals\", \"FactionState\":\"CivilWar\", \"Government\":\"Democracy\", \"Influence\":0.226000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"SquadronFaction\":true, \"HomeSystem\":true, \"MyReputation\":100.000000, \"ActiveStates\":[ { \"State\":\"CivilLiberty\" }, { \"State\":\"Investment\" }, { \"State\":\"CivilWar\" } ] }, { \"Name\":\"Nationalists of LHS 20\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.105000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":0.000000 }, { \"Name\":\"LHS 20 Organisation\", \"FactionState\":\"CivilWar\", \"Government\":\"Anarchy\", \"Influence\":0.166000, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":5.940000, \"ActiveStates\":[ { \"State\":\"CivilWar\" } ] }, { \"Name\":\"LHS 20 Engineers\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.162000, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":15.000000 } ], \"SystemFaction\":{ \"Name\":\"Movement for LHS 20 Liberals\", \"FactionState\":\"CivilWar\" } }";
             List<Event> events = JournalMonitor.ParseJournalEntry(line);
             Assert.AreEqual(1, events.Count);
             JumpedEvent @event = (JumpedEvent)events[0];
@@ -935,7 +940,7 @@ namespace UnitTests
         [TestMethod]
         public void TestJournalLocationEventHandler()
         {
-            string line = "{ \"timestamp\":\"2018-12-27T08:05:23Z\", \"event\":\"Location\", \"Docked\":true, \"MarketID\":3230448384, \"StationName\":\"Cleve Hub\", \"StationType\":\"Orbis\", \"StarSystem\":\"Eravate\", \"SystemAddress\":5856221467362, \"StarPos\":[-42.43750,-3.15625,59.65625], \"SystemAllegiance\":\"Federation\", \"SystemEconomy\":\"$economy_Agri;\", \"SystemEconomy_Localised\":\"Agriculture\", \"SystemSecondEconomy\":\"$economy_Industrial;\", \"SystemSecondEconomy_Localised\":\"Industrial\", \"SystemGovernment\":\"$government_Corporate;\", \"SystemGovernment_Localised\":\"Corporate\", \"SystemSecurity\":\"$SYSTEM_SECURITY_high;\", \"SystemSecurity_Localised\":\"High Security\", \"Population\":740380179, \"Body\":\"Cleve Hub\", \"BodyID\":48, \"BodyType\":\"Station\", \"Powers\":[ \"Zachary Hudson\" ], \"PowerplayState\":\"Exploited\", \"Factions\":[ { \"Name\":\"Eravate School of Commerce\", \"FactionState\":\"None\", \"Government\":\"Cooperative\", \"Influence\":0.086913, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":91.840103 }, { \"Name\":\"Pilots Federation Local Branch\", \"FactionState\":\"None\", \"Government\":\"Democracy\", \"Influence\":0.000000, \"Allegiance\":\"PilotsFederation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":42.790199 }, { \"Name\":\"Independent Eravate Free\", \"FactionState\":\"None\", \"Government\":\"Democracy\", \"Influence\":0.123876, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":100.000000 }, { \"Name\":\"Eravate Network\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.036963, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":100.000000 }, { \"Name\":\"Traditional Eravate Autocracy\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.064935, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":100.000000 }, { \"Name\":\"Eravate Life Services\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.095904, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":100.000000 }, { \"Name\":\"Official Eravate Flag\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.179820, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":100.000000 }, { \"Name\":\"Adle's Armada\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.411588, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"SquadronFaction\":true, \"HappiestSystem\":true, \"HomeSystem\":true, \"MyReputation\":100.000000, \"PendingStates\":[ { \"State\":\"Boom\", \"Trend\":0 } ] } ], \"SystemFaction\":\"Adle's Armada\" }";
+            string line = "{ \"timestamp\":\"2018-12-27T08:05:23Z\", \"event\":\"Location\", \"Docked\":true, \"MarketID\":3230448384, \"StationName\":\"Cleve Hub\", \"StationType\":\"Orbis\", \"StarSystem\":\"Eravate\", \"SystemAddress\":5856221467362, \"StarPos\":[-42.43750,-3.15625,59.65625], \"SystemAllegiance\":\"Federation\", \"SystemEconomy\":\"$economy_Agri;\", \"SystemEconomy_Localised\":\"Agriculture\", \"SystemSecondEconomy\":\"$economy_Industrial;\", \"SystemSecondEconomy_Localised\":\"Industrial\", \"SystemGovernment\":\"$government_Corporate;\", \"SystemGovernment_Localised\":\"Corporate\", \"SystemSecurity\":\"$SYSTEM_SECURITY_high;\", \"SystemSecurity_Localised\":\"High Security\", \"Population\":740380179, \"Body\":\"Cleve Hub\", \"BodyID\":48, \"BodyType\":\"Station\", \"Powers\":[ \"Zachary Hudson\" ], \"PowerplayState\":\"Exploited\", \"Factions\":[ { \"Name\":\"Eravate School of Commerce\", \"FactionState\":\"None\", \"Government\":\"Cooperative\", \"Influence\":0.086913, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":91.840103 }, { \"Name\":\"Pilots Federation Local Branch\", \"FactionState\":\"None\", \"Government\":\"Democracy\", \"Influence\":0.000000, \"Allegiance\":\"PilotsFederation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":42.790199 }, { \"Name\":\"Independent Eravate Free\", \"FactionState\":\"None\", \"Government\":\"Democracy\", \"Influence\":0.123876, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":100.000000 }, { \"Name\":\"Eravate Network\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.036963, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":100.000000 }, { \"Name\":\"Traditional Eravate Autocracy\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.064935, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":100.000000 }, { \"Name\":\"Eravate Life Services\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.095904, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":100.000000 }, { \"Name\":\"Official Eravate Flag\", \"FactionState\":\"None\", \"Government\":\"Dictatorship\", \"Influence\":0.179820, \"Allegiance\":\"Independent\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"MyReputation\":100.000000 }, { \"Name\":\"Adle's Armada\", \"FactionState\":\"None\", \"Government\":\"Corporate\", \"Influence\":0.411588, \"Allegiance\":\"Federation\", \"Happiness\":\"$Faction_HappinessBand2;\", \"Happiness_Localised\":\"Happy\", \"SquadronFaction\":true, \"HappiestSystem\":true, \"HomeSystem\":true, \"MyReputation\":100.000000, \"PendingStates\":[ { \"State\":\"Boom\", \"Trend\":0 } ] } ], \"SystemFaction\":{ \"Name\":\"Adle's Armada\", \"FactionState\":\"None\" } }";
             List<Event> events = JournalMonitor.ParseJournalEntry(line);
             Assert.AreEqual(1, events.Count);
             LocationEvent @event = (LocationEvent)events[0];

@@ -34,7 +34,6 @@ namespace EddiEvents
             VARIABLES.Add("longitude", "The longitude of the commander (if on the ground)");
             VARIABLES.Add("latitude", "The latitude of the commander (if on the ground)");
             VARIABLES.Add("population", "The population of the system to which the commander has jumped");
-            VARIABLES.Add("factions", "The factions in the system (this is a list of faction objects)");
         }
 
         public string system { get; private set; }
@@ -55,15 +54,10 @@ namespace EddiEvents
 
         public string stationtype => (stationModel ?? StationModel.None).localizedName;
 
-        public string allegiance => (Allegiance ?? Superpower.None).localizedName;
-
-        public string faction { get; private set; }
-
         public string economy => (Economy ?? Economy.None).localizedName;
 
         public string economy2 => (Economy2 ?? Economy.None).localizedName;
 
-        public string government => (Government ?? Government.None).localizedName;
 
         public string security => (securityLevel ?? SecurityLevel.None).localizedName;
 
@@ -73,20 +67,27 @@ namespace EddiEvents
 
         public decimal? latitude { get; private set; }
 
-        public List<Faction> factions { get; private set; }
+        // Faction properties
+        public string faction { get; private set; }
+        public string factionstate => (FactionState ?? FactionState.None).localizedName;
+        public string allegiance => (Allegiance ?? Superpower.None).localizedName;
+        public string government => (Government ?? Government.None).localizedName;
 
         // These properties are not intended to be user facing
         public long? systemAddress { get; private set; }
         public long? marketId { get; private set; }
         public Economy Economy { get; private set; } = Economy.None;
         public Economy Economy2 { get; private set; } = Economy.None;
+        public Faction controllingfaction { get; private set; }
+        public FactionState FactionState { get; private set; } = FactionState.None;
         public Superpower Allegiance { get; private set; } = Superpower.None;
         public Government Government { get; private set; } = Government.None;
+        public List<Faction> factions { get; private set; }
         public SecurityLevel securityLevel { get; private set; } = SecurityLevel.None;
         public StationModel stationModel { get; private set; } = StationModel.None;
         public BodyType bodyType { get; private set; } = BodyType.None;
 
-        public LocationEvent(DateTime timestamp, string system, decimal x, decimal y, decimal z, long systemAddress, string body, BodyType bodytype, bool docked, string station, StationModel stationtype, long? marketId, Superpower allegiance, string faction, Economy economy, Economy economy2, Government government, SecurityLevel security, long? population, decimal? longitude, decimal? latitude, List<Faction> factions) : base(timestamp, NAME)
+        public LocationEvent(DateTime timestamp, string system, decimal x, decimal y, decimal z, long systemAddress, string body, BodyType bodytype, bool docked, string station, StationModel stationtype, long? marketId, Faction controllingfaction, Economy economy, Economy economy2, SecurityLevel security, long? population, decimal? longitude, decimal? latitude, List<Faction> factions) : base(timestamp, NAME)
         {
             this.system = system;
             this.x = x;
@@ -99,11 +100,13 @@ namespace EddiEvents
             this.station = station;
             this.stationModel = stationtype;
             this.marketId = marketId;
-            this.Allegiance = allegiance;
-            this.faction = faction;
+            this.controllingfaction = controllingfaction;
+            this.faction = controllingfaction.name;
+            this.FactionState = controllingfaction.FactionState;
+            this.Allegiance = controllingfaction.Allegiance;
+            this.Government = controllingfaction.Government;
             this.Economy = (economy ?? Economy.None);
             this.Economy2 = (economy2 ?? Economy.None);
-            this.Government = government;
             this.securityLevel = security;
             this.population = population;
             this.longitude = longitude;
