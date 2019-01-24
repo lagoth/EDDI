@@ -929,15 +929,7 @@ namespace Eddi
                 // Our data source may not include the market id or system address
                 station.marketId = theEvent.marketId;
                 station.systemAddress = theEvent.systemAddress;
-
-                // Information from the event might be more current than that from our data source so use it in preference
-                Faction controllingFaction = new Faction
-                {
-                    name = theEvent.faction,
-                    Government = theEvent.Government,
-                    Allegiance = theEvent.Allegiance
-                };
-                station.Faction = controllingFaction;
+                station.Faction = theEvent.controllingfaction;
 
                 CurrentStation = station;
 

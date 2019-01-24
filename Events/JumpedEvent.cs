@@ -66,19 +66,16 @@ namespace EddiEvents
         public List<Faction> factions { get; private set; }
 
         // Faction properties
-        public string faction { get; private set; }
-        public string factionstate => (FactionState ?? FactionState.None).localizedName;
-        public string allegiance => (Allegiance ?? Superpower.None).localizedName;
-        public string government => (Government ?? Government.None).localizedName;
+        public string faction => controllingfaction?.name;
+        public string factionstate => (controllingfaction?.FactionState ?? FactionState.None).localizedName;
+        public string allegiance => (controllingfaction?.Allegiance ?? Superpower.None).localizedName;
+        public string government => (controllingfaction?.Government ?? Government.None).localizedName;
 
         // These properties are not intended to be user facing
         public long systemAddress { get; private set; }
         public Economy Economy { get; private set; } = Economy.None;
         public Economy Economy2 { get; private set; } = Economy.None;
         public Faction controllingfaction { get; private set; }
-        public FactionState FactionState { get; private set; } = FactionState.None;
-        public Superpower Allegiance { get; private set; } = Superpower.None;
-        public Government Government { get; private set; } = Government.None;
         public SecurityLevel securityLevel { get; private set; } = SecurityLevel.None;
         public FactionState factionState { get; private set; } = FactionState.None;
 
@@ -95,10 +92,6 @@ namespace EddiEvents
             this.fuelremaining = fuelremaining;
             this.boostused = boostUsed;
             this.controllingfaction = controllingfaction;
-            this.faction = controllingfaction.name;
-            this.FactionState = controllingfaction.FactionState;
-            this.Allegiance = controllingfaction.Allegiance;
-            this.Government = controllingfaction.Government;
             this.destination = destination;
             this.destdistance = destdistance;
             this.Economy = (economy ?? Economy.None);

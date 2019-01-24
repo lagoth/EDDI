@@ -3568,9 +3568,17 @@ namespace EddiJournalMonitor
             Faction faction = new Faction();
             if (data.TryGetValue(key + "Faction", out object val))
             {
-                Dictionary<string, object> factionData = (Dictionary<string, object>)val;
-                faction.name = JsonParsing.getString(factionData, "Name");
-                faction.FactionState = FactionState.FromEDName(JsonParsing.getString(factionData, "FactionState") ?? "None");
+                Dictionary<string, object> factionData = val as Dictionary<string, object>;
+                if (factionData != null) // 3.3.03 or later journal
+                {
+                    faction.name = JsonParsing.getString(factionData, "Name");
+                    faction.FactionState = FactionState.FromEDName(JsonParsing.getString(factionData, "FactionState") ?? "None");
+                }
+                else // per-3.3.03 journal
+                {
+                    faction.name = val as string;
+                    faction.FactionState = FactionState.FromEDName(JsonParsing.getString(data, "FactionState") ?? "None");
+                }
             }
             faction.Allegiance = getAllegiance(data, key + "Allegiance");
             faction.Government = Government.FromEDName(JsonParsing.getString(data, key + "Government"));

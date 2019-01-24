@@ -226,9 +226,9 @@ namespace UnitTests
             Assert.AreEqual("Orbis", theEvent.stationModel.edname);
             Assert.AreEqual("Donaldson", theEvent.station);
             Assert.AreEqual("Alioth", theEvent.system);
-            Assert.AreEqual("Boom", theEvent.FactionState.invariantName);
-            Assert.AreEqual("Democracy", theEvent.Government.invariantName);
-            Assert.AreEqual("Alliance", theEvent.Allegiance.invariantName);
+            Assert.AreEqual("Boom", theEvent.controllingfaction.FactionState.invariantName);
+            Assert.AreEqual("Democracy", theEvent.controllingfaction.Government.invariantName);
+            Assert.AreEqual("Alliance", theEvent.controllingfaction.Allegiance.invariantName);
             Assert.AreEqual(20, theEvent.stationservices.Count);
             Assert.AreEqual(1, theEvent.economyShares.Count);
             Assert.AreEqual("Service", theEvent.economyShares[0].economy.invariantName);
@@ -558,7 +558,7 @@ namespace UnitTests
             Assert.AreEqual(-41.06250M, jumpedEvent.x);
             Assert.AreEqual(-62.15625M, jumpedEvent.y);
             Assert.AreEqual(-103.25000M, jumpedEvent.z);
-            Assert.AreEqual("Independent", jumpedEvent.Allegiance.invariantName);
+            Assert.AreEqual("Independent", jumpedEvent.controllingfaction.Allegiance.invariantName);
             Assert.AreEqual("High Tech", jumpedEvent.economy);
             Assert.AreEqual("Refinery", jumpedEvent.economy2);
             Assert.AreEqual("Democracy", jumpedEvent.government);
@@ -747,14 +747,14 @@ namespace UnitTests
             Assert.IsTrue(events.Count == 1);
             LocationEvent @event = (LocationEvent)events[0];
 
-            Assert.AreEqual("Independent", @event.Allegiance.invariantName);
+            Assert.AreEqual("Independent", @event.controllingfaction.Allegiance.invariantName);
             Assert.AreEqual("RayGateway", @event.body);
             Assert.AreEqual("Station", @event.bodyType.invariantName);
             Assert.AreEqual(true, @event.docked);
             Assert.AreEqual("High Tech", @event.Economy.invariantName);
             Assert.AreEqual("Refinery", @event.Economy2.invariantName);
             Assert.AreEqual("EXO", @event.faction);
-            Assert.AreEqual("Democracy", @event.Government.invariantName);
+            Assert.AreEqual("Democracy", @event.controllingfaction.Government.invariantName);
             Assert.IsNull(@event.latitude);
             Assert.IsNull(@event.longitude);
             Assert.AreEqual(3223343616, @event.marketId);
@@ -833,7 +833,7 @@ namespace UnitTests
             List<Event> events = JournalMonitor.ParseJournalEntry(line);
             JumpedEvent @event = (JumpedEvent)events[0];
 
-            Assert.AreEqual("Thargoid", @event.Allegiance.invariantName);
+            Assert.AreEqual("Thargoid", @event.controllingfaction.Allegiance.invariantName);
         }
 
         [TestMethod]
@@ -843,7 +843,7 @@ namespace UnitTests
             List<Event> events = JournalMonitor.ParseJournalEntry(line);
             JumpedEvent @event = (JumpedEvent)events[0];
 
-            Assert.AreEqual("Guardian", @event.Allegiance.invariantName);
+            Assert.AreEqual("Guardian", @event.controllingfaction.Allegiance.invariantName);
         }
 
         [TestMethod]
@@ -903,8 +903,8 @@ namespace UnitTests
             LocationEvent @event = (LocationEvent)events[0];
 
             Assert.IsNotNull(@event.raw);
-            Assert.AreEqual("None", @event.Allegiance?.invariantName);
-            Assert.AreEqual("$faction_None", @event.Allegiance?.edname);
+            Assert.AreEqual("None", @event.controllingfaction.Allegiance?.invariantName);
+            Assert.AreEqual("$faction_None", @event.controllingfaction.Allegiance?.edname);
         }
 
         [TestMethod]
