@@ -5,6 +5,7 @@ using EddiDataProviderService;
 using EddiDataDefinitions;
 using EddiMaterialMonitor;
 using EddiMissionMonitor;
+using EddiNavigationService;
 using EddiShipMonitor;
 using EddiSpeechResponder;
 using EddiSpeechService;
@@ -84,10 +85,12 @@ namespace EddiVoiceAttackResponder
                     }
                     catch (Exception ex)
                     {
-                        Dictionary<string, object> data = new Dictionary<string, object>();
-                        data.Add("event", JsonConvert.SerializeObject(theEvent));
-                        data.Add("exception", ex.Message);
-                        data.Add("stacktrace", ex.StackTrace);
+                        Dictionary<string, object> data = new Dictionary<string, object>
+                        {
+                            { "event", JsonConvert.SerializeObject(theEvent) },
+                            { "exception", ex.Message },
+                            { "stacktrace", ex.StackTrace }
+                        };
                         Logging.Error("VoiceAttack failed to handle event.", data);
                     }
                 };
@@ -689,7 +692,7 @@ namespace EddiVoiceAttackResponder
 
                 string speech = SpeechFromScript(script);
 
-                SpeechService.Instance.Say(((ShipMonitor)EDDI.Instance.ObtainMonitor("Ship monitor")).GetCurrentShip(), speech, (int)priority, voice);
+                SpeechService.Instance.Say(((ShipMonitor)EDDI.Instance.ObtainMonitor("Ship monitor")).GetCurrentShip(), speech, (int)priority, voice, false, null, true);
             }
             catch (Exception e)
             {
@@ -718,7 +721,7 @@ namespace EddiVoiceAttackResponder
 
                 string speech = SpeechFromScript(script);
 
-                SpeechService.Instance.Say(((ShipMonitor)EDDI.Instance.ObtainMonitor("Ship monitor")).GetCurrentShip(), speech, (int)priority, voice, true);
+                SpeechService.Instance.Say(((ShipMonitor)EDDI.Instance.ObtainMonitor("Ship monitor")).GetCurrentShip(), speech, (int)priority, voice, true, null, true);
             }
             catch (Exception e)
             {
@@ -754,15 +757,17 @@ namespace EddiVoiceAttackResponder
 
                 int? priority = vaProxy.GetInt("Priority");
 
+                string voice = vaProxy.GetText("Voice");
+
                 SpeechResponder speechResponder = (SpeechResponder)EDDI.Instance.ObtainResponder("Speech responder");
                 if (speechResponder == null)
                 {
                     Logging.Warn("Unable to find speech responder");
                 }
 
-                string voice = vaProxy.GetText("Voice");
-
-                speechResponder.Say(((ShipMonitor)EDDI.Instance.ObtainMonitor("Ship monitor")).GetCurrentShip(), script, null, priority, voice);
+                // sayOutLoud must be true to match the behavior described by the wiki for the `disablespeechresponder` command
+                // i.e. "not talk unless specifically asked for information"
+                speechResponder?.Say(((ShipMonitor)EDDI.Instance.ObtainMonitor("Ship monitor")).GetCurrentShip(), script, null, priority, voice, true, true);
             }
             catch (Exception e)
             {
@@ -974,67 +979,72 @@ namespace EddiVoiceAttackResponder
                 {
                     case "cancel":
                         {
-                            ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).CancelRoute();
+                            Navigation.Instance.CancelRoute();
                         }
                         break;
                     case "expiring":
                         {
-                            ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetExpiringRoute();
+                            Navigation.Instance.GetExpiringRoute();
+                        }
+                        break;
+                    case "facilitator":
+                        {
+                            Navigation.Instance.GetFacilitatorRoute();
                         }
                         break;
                     case "farthest":
                         {
-                            ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetFarthestRoute();
+                            Navigation.Instance.GetFarthestRoute();
                         }
                         break;
                     case "most":
                         {
                             if (system == null || system == string.Empty)
                             {
-                                ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetMostRoute();
+                                Navigation.Instance.GetMostRoute();
                             }
                             else
                             {
-                                ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetMostRoute(system);
+                                Navigation.Instance.GetMostRoute(system);
                             }
                         }
                         break;
                     case "nearest":
                         {
-                            ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetNearestRoute();
+                            Navigation.Instance.GetNearestRoute();
                         }
                         break;
                     case "next":
                         {
-                            ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).SetNextRoute();
+                            Navigation.Instance.SetNextRoute();
                         }
                         break;
                     case "route":
                         {
                             if (system == null || system == string.Empty)
                             {
-                                ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetMissionsRoute();
+                                Navigation.Instance.GetMissionsRoute();
                             }
                             else
                             {
-                                ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).GetMissionsRoute(system);
+                                Navigation.Instance.GetMissionsRoute(system);
                             }
                         }
                         break;
                     case "set":
                         {
-                            ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).SetRoute(system);
+                            Navigation.Instance.SetRoute(system);
                         }
                         break;
                     case "source":
                         {
                             if (system == null || system == string.Empty)
                             {
-                                ((CargoMonitor)EDDI.Instance.ObtainMonitor("Cargo monitor")).GetSourceRoute();
+                                Navigation.Instance.GetSourceRoute();
                             }
                             else
                             {
-                                ((CargoMonitor)EDDI.Instance.ObtainMonitor("Cargo monitor")).GetSourceRoute(system);
+                                Navigation.Instance.GetSourceRoute(system);
                             }
                         }
                         break;
@@ -1042,11 +1052,11 @@ namespace EddiVoiceAttackResponder
                         {
                             if (system == null || system == string.Empty)
                             {
-                                ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).UpdateMissionsRoute();
+                                Navigation.Instance.UpdateRoute();
                             }
                             else
                             {
-                                ((MissionMonitor)EDDI.Instance.ObtainMonitor("Mission monitor")).UpdateMissionsRoute(system);
+                                Navigation.Instance.UpdateRoute(system);
                             }
                         }
                         break;

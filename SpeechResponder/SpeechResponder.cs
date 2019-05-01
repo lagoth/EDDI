@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using Cottle.Values;
-using EddiSpeechService;
-using Utilities;
-using Newtonsoft.Json;
-using EddiEvents;
+﻿using Cottle.Values;
 using Eddi;
-using System.Windows.Controls;
-using System;
-using System.Text.RegularExpressions;
-using System.IO;
 using EddiDataDefinitions;
+using EddiEvents;
 using EddiShipMonitor;
+using EddiSpeechService;
 using EddiStatusMonitor;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Controls;
+using Utilities;
 
 namespace EddiSpeechResponder
 {
@@ -221,7 +221,7 @@ namespace EddiSpeechResponder
             Say(scriptResolver, ((ShipMonitor)EDDI.Instance.ObtainMonitor("Ship monitor"))?.GetCurrentShip(), @event.type, @event, null, null, SayOutLoud());
         }
 
-        private static bool SayOutLoud()
+        public bool SayOutLoud()
         {
             // By default we say things unless we've been told not to
             bool sayOutLoud = true;
@@ -236,13 +236,13 @@ namespace EddiSpeechResponder
         }
 
         // Say something with the default resolver
-        public void Say(Ship ship, string scriptName, Event theEvent = null, int? priority = null, string voice = null, bool sayOutLoud = true)
+        public void Say(Ship ship, string scriptName, Event theEvent = null, int? priority = null, string voice = null, bool sayOutLoud = true, bool invokedFromVA = false)
         {
-            Say(scriptResolver, ship, scriptName, theEvent, priority, voice, sayOutLoud);
+            Say(scriptResolver, ship, scriptName, theEvent, priority, voice, sayOutLoud, invokedFromVA);
         }
 
         // Say something with a custom resolver
-        public void Say(ScriptResolver resolver, Ship ship, string scriptName, Event theEvent = null, int? priority = null, string voice = null, bool sayOutLoud = true)
+        public void Say(ScriptResolver resolver, Ship ship, string scriptName, Event theEvent = null, int? priority = null, string voice = null, bool sayOutLoud = true, bool invokedFromVA = false)
         {
             Dictionary<string, Cottle.Value> dict = createVariables(theEvent);
             string speech = resolver.resolve(scriptName, dict);
@@ -255,7 +255,7 @@ namespace EddiSpeechResponder
                 }
                 if (sayOutLoud && !(subtitles && subtitlesOnly))
                 {
-                    SpeechService.Instance.Say(ship, speech, (priority == null ? resolver.priority(scriptName) : (int)priority), voice, false, theEvent?.type);
+                    SpeechService.Instance.Say(ship, speech, (priority == null ? resolver.priority(scriptName) : (int)priority), voice, false, theEvent?.type, invokedFromVA);
                 }
             }
         }
@@ -265,9 +265,10 @@ namespace EddiSpeechResponder
         {
             Dictionary<string, Cottle.Value> dict = new Dictionary<string, Cottle.Value>
             {
+                ["destinationdistance"] = EDDI.Instance.DestinationDistanceLy,
+                ["environment"] = EDDI.Instance.Environment,
                 ["va_active"] = EDDI.FromVA,
-                ["vehicle"] = EDDI.Instance.Vehicle,
-                ["environment"] = EDDI.Instance.Environment
+                ["vehicle"] = EDDI.Instance.Vehicle
             };
 
             if (EDDI.Instance.Cmdr != null)
@@ -303,6 +304,16 @@ namespace EddiSpeechResponder
             if (EDDI.Instance.NextStarSystem != null)
             {
                 dict["nextsystem"] = new ReflectionValue(EDDI.Instance.NextStarSystem);
+            }
+
+            if (EDDI.Instance.DestinationStarSystem != null)
+            {
+                dict["destinationsystem"] = new ReflectionValue(EDDI.Instance.DestinationStarSystem);
+            }
+
+            if (EDDI.Instance.DestinationStation != null)
+            {
+                dict["destinationstation"] = new ReflectionValue(EDDI.Instance.DestinationStation);
             }
 
             if (EDDI.Instance.CurrentStation != null)

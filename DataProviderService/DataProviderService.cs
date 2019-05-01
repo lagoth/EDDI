@@ -1,4 +1,5 @@
-﻿using EddiDataDefinitions;
+﻿using EddiBgsService;
+using EddiDataDefinitions;
 using EddiStarMapService;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace EddiDataProviderService
         // Uses the EDSM data service and legacy EDDP data
         public static StarSystem GetSystemData(string system, bool showCoordinates = true, bool showSystemInformation = true, bool showBodies = true, bool showStations = true, bool showFactions = true)
         {
-            if (system == null) { return null; }
+            if (system == null || string.IsNullOrEmpty(system)) { return null; }
 
             StarSystem starSystem = StarMapService.GetStarMapSystem(system, showCoordinates, showSystemInformation);
             starSystem = GetSystemExtras(starSystem, showSystemInformation, showBodies, showStations, showFactions) ?? new StarSystem() { name = system };
@@ -29,7 +30,10 @@ namespace EddiDataProviderService
             List<StarSystem> fullStarSystems = new List<StarSystem>();
             foreach (string systemName in systemNames)
             {
-                fullStarSystems.Add(GetSystemExtras(starSystems.Find(s => s.name == systemName), showSystemInformation, showBodies, showStations, showFactions) ?? new StarSystem() { name = systemName } );
+                if (!string.IsNullOrEmpty(systemName))
+                {
+                    fullStarSystems.Add(GetSystemExtras(starSystems.Find(s => s.name == systemName), showSystemInformation, showBodies, showStations, showFactions) ?? new StarSystem() { name = systemName });
+                }
             }
             return starSystems;
         }
@@ -87,6 +91,31 @@ namespace EddiDataProviderService
                 }
             }
             return stations;
+        }
+
+        ///<summary> Faction data from EliteBGS (allows search by faction name - EDSM can only search by system name). 
+        /// If a systemName is provided, we can filter factions that share a name according to whether they have a presence in a known system </summary>
+        public static Faction GetFactionByName(string factionName, string systemName = null)
+        {
+            List<KeyValuePair<string, object>> queryList = new List<KeyValuePair<string, object>>()
+            {
+                new KeyValuePair<string, object>(BgsService.FactionParameters.factionName, factionName)
+            };
+            List<Faction> factions = BgsService.GetFactions(BgsService.factionEndpoint, queryList);
+
+            // If a systemName is provided, we can filter factions that share a name according to whether they have a presence in a known system
+            if (systemName != null && factions.Count > 1)
+            {
+                foreach (Faction faction in factions)
+                {
+                    faction.presences = faction.presences.Where(f => f.systemName == systemName)?.ToList();
+                }
+            }
+
+            return factions?.FirstOrDefault() ?? new Faction()
+            {
+                name = factionName
+            };
         }
 
         // EDSM flight log synchronization

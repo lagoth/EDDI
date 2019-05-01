@@ -23,12 +23,15 @@ namespace EddiVoiceAttackResponder
         private static StarSystem HomeStarSystem { get; set; } = new StarSystem();
         private static StarSystem LastStarSystem { get; set; } = new StarSystem();
         private static StarSystem NextStarSystem { get; set; } = new StarSystem();
+        private static StarSystem DestinationStarSystem { get; set; } = new StarSystem();
         private static StarSystem SquadronStarSystem { get; set; } = new StarSystem();
         private static Body CurrentStellarBody { get; set; } = new Body();
         private static Station CurrentStation { get; set; } = new Station();
         private static Station HomeStation { get; set; } = new Station();
+        private static Station DestinationStation { get; set; } = new Station();
         private static Commander Commander { get; set; } = new Commander();
         private static List<Ship> vaShipyard { get; set; } = new List<Ship>();
+        private static decimal DestinationDistanceLy { get; set; }
 
         public static void setEventValues(dynamic vaProxy, Event theEvent, List<string> setKeys)
         {
@@ -277,6 +280,44 @@ namespace EddiVoiceAttackResponder
 
             try
             {
+                if (EDDI.Instance.DestinationStarSystem != DestinationStarSystem)
+                {
+                    setStarSystemValues(EDDI.Instance.DestinationStarSystem, "Destination system", ref vaProxy);
+                    DestinationStarSystem = EDDI.Instance.DestinationStarSystem;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.Error("Failed to set destination system", ex);
+            }
+
+            try
+            {
+                if (EDDI.Instance.DestinationDistanceLy != DestinationDistanceLy)
+                {
+                    vaProxy.SetDecimal("Destination system distance", EDDI.Instance.DestinationDistanceLy);
+                    DestinationDistanceLy = EDDI.Instance.DestinationDistanceLy;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.Error("Failed to set destination distance", ex);
+            }
+
+            try
+            {
+                if (EDDI.Instance.DestinationStation != DestinationStation)
+                {
+                    setStationValues(EDDI.Instance.DestinationStation, "Destination station", ref vaProxy);
+                    DestinationStation = EDDI.Instance.DestinationStation;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.Error("Failed to set destination station", ex);
+            }
+            try
+            {
                 if (EDDI.Instance.SquadronStarSystem != SquadronStarSystem)
                 {
                     setStarSystemValues(EDDI.Instance.SquadronStarSystem, "Squadron system", ref vaProxy);
@@ -446,7 +487,8 @@ namespace EddiVoiceAttackResponder
             vaProxy.SetText(prefix + " government", (station?.Faction?.Government ?? Government.None).localizedName);
             vaProxy.SetText(prefix + " allegiance", (station?.Faction?.Allegiance ?? Superpower.None).localizedName);
             vaProxy.SetText(prefix + " faction", station?.Faction?.name);
-            vaProxy.SetText(prefix + " state", (station?.Faction?.FactionState ?? FactionState.None).localizedName);
+            vaProxy.SetText(prefix + " state", (station?.Faction?.presences
+                .FirstOrDefault(p => p.systemName == station.systemname)?.FactionState ?? FactionState.None).localizedName);
             vaProxy.SetText(prefix + " primary economy", station?.primaryeconomy);
             vaProxy.SetText(prefix + " secondary economy", station?.secondaryeconomy);
             // Services
@@ -610,15 +652,14 @@ namespace EddiVoiceAttackResponder
                         StarSystem StoredShipStarSystem = StarSystemSqLiteRepository.Instance.GetOrCreateStarSystem(ship.starsystem);
 
                         // Work out the distance to the system where the ship is stored if we can
+                        // CurrentStarSystem might not have been initialised yet so we check. If not, it may be set on the next pass of the setValues() method.
                         if (EDDI.Instance.CurrentStarSystem != null)
                         {
-                            // CurrentStarSystem might not have been initialised yet so we check. If not, it may be set on the next pass of the setValues() method.
-                            StarSystem ThisStarSystem = StarSystemSqLiteRepository.Instance.GetStarSystem(EDDI.Instance.CurrentStarSystem.name);
-                            if (ThisStarSystem?.x != null & StoredShipStarSystem?.x != null)
+                            if (EDDI.Instance.CurrentStarSystem.x != null & StoredShipStarSystem?.x != null)
                             {
-                                decimal dx = (ThisStarSystem.x - StoredShipStarSystem.x) ?? 0M;
-                                decimal dy = (ThisStarSystem.y - StoredShipStarSystem.y) ?? 0M;
-                                decimal dz = (ThisStarSystem.z - StoredShipStarSystem.z) ?? 0M;
+                                decimal dx = (EDDI.Instance.CurrentStarSystem.x - StoredShipStarSystem.x) ?? 0M;
+                                decimal dy = (EDDI.Instance.CurrentStarSystem.y - StoredShipStarSystem.y) ?? 0M;
+                                decimal dz = (EDDI.Instance.CurrentStarSystem.z - StoredShipStarSystem.z) ?? 0M;
                                 decimal distance = (decimal)(Math.Sqrt((double)(dx * dx + dy * dy + dz * dz)));
                                 vaProxy.SetDecimal(prefix + " distance", distance);
                             }
@@ -719,10 +760,6 @@ namespace EddiVoiceAttackResponder
 
         private static void setStarSystemValues(StarSystem system, string prefix, ref dynamic vaProxy)
         {
-            if (system == null)
-            {
-                return;
-            }
             Logging.Debug("Setting system information (" + prefix + ")");
             try
             {
@@ -734,7 +771,8 @@ namespace EddiVoiceAttackResponder
                 vaProxy.SetText(prefix + " government", (system?.Faction?.Government ?? Government.None).localizedName);
                 vaProxy.SetText(prefix + " faction", system?.Faction?.name);
                 vaProxy.SetText(prefix + " primary economy", system?.primaryeconomy);
-                vaProxy.SetText(prefix + " state", (system?.Faction?.FactionState ?? FactionState.None).localizedName);
+                vaProxy.SetText(prefix + " state", (system?.Faction?.presences
+                    .FirstOrDefault(p => p.systemName == system.name)?.FactionState ?? FactionState.None).localizedName);
                 vaProxy.SetText(prefix + " security", system?.security);
                 vaProxy.SetText(prefix + " power", system?.power);
                 vaProxy.SetText(prefix + " power (spoken)", Translations.Power(EDDI.Instance.CurrentStarSystem?.power));

@@ -2,6 +2,67 @@
 
 Full details of the variables available for each noted event, and VoiceAttack integrations, are available in the individual [event pages](https://github.com/EDCD/EDDI/wiki/Events).
 
+### Development
+  * Core
+    * All 'Location' events are now processed.
+    * Added `Docked` and `Landed` Environment states. Note that `Environment` follows the ship and `Vehicle` follows the commander.
+  * Crime Monitor
+    * New monitor tracks all bond & bounty awards and fines & bounties incurred.
+	* Monitor attempts to determine the minor faction's 'home system' via its name, but defaults to system presence with highest influence.
+	* Minor faction's 'home system' may be manually entered and is archived for future use.
+    * 'Add Record' button allows manual addition of claims, fines & bounties.
+    * 'Find Legal Facilities' button allows standalone users to locate the nearest 'Legal Facilities' contact. 
+    * New `FactionRecord` and `FactionReport` properties, available via Cottle scripting. See the `Variables` window for details.
+  * Mission Monitor
+    * Added 'Find Route', 'Next Route', 'Update Route', and 'Clear Route' buttons to give standalone users access to missions routing functionality.
+  * Navigation Service
+    * Consolidated all `RouteDetails()` functionality.
+	* Added `facilitator` route type to `RouteDetails()`, which finds and sets the `Destination` properties to the nearest 'Legal Facilities' contact.
+    * Destination system, distance & station data populated & maintained by `RouteDetails()`. Distance re-calculated after each jump.
+    * The `missionsRouteList` & `missionsRouteDistance` properties simplified to `RouteList` & `RouteDistance`, respectively.
+  * Speech responder
+    * Added `destinationsystem`, `destinationdistance`, and `destinationstation` properties (similar to `system`)
+    * Added `Crime check system` script to report wanted status and 'legal facilities', upon entering the system.
+    * Added `Crime check station` script to report 'legal facilities', upon entering normal space, next to station.
+  * Voice Attack
+    * Added `Destination system`, `Destination system distance`, and `Destination station` properties.
+
+### 3.4
+  * Core
+    * Added localised names for the Advanced Docking Computer and Supercruise Assist modules.
+  * Galnet monitor
+    * Restored multi-lingual access.
+    * No longer loses its place if a web request times out or fails.
+  * Speech responder
+    * Added event `Discovery scan`, triggered when you "honk" the discovery scanner
+    * Added new function `GetFaction()` to obtain details about a faction.
+    * Revised faction object to allow reporting faction data spanning multiple star systems.
+  * Voice Attack
+    * Fixed a bug that would incorrectly disable invoked speech while `disablespeechresponder` was set.
+
+### 3.3.7
+  * Speech responder
+    * Preliminary Portuguese version of the default personality script.
+
+### 3.3.7-rc1
+  * Speech responder
+    * Fixed some minor errors re plurals etc in the mission reports and fuel check scripts.
+
+### 3.3.7-b2
+  * Commander details
+    * Added auto-complete for the home system and squadron system and catered for two-character system names such as 'Ix'.
+  * GalNet monitor
+    * Restored access using the new RSS feed, but it's English-only for now unfortunately.
+  * Journal monitor
+    * Fixed a bug that would prevent new file header events from registering when Elite Dangerous was restarted with EDDI running.
+  * Ship monitor
+    * Dropped access for EDShipyard.com as it is no longer being maintained.
+  * Speech responder
+    * Fixed a bug that would cause Test scripts to only be written to file and not voiced.
+    * Amended layout of the 'Delete' button.
+  * VoiceAttack responder
+    * Reduced CPU utilization significantly in some cases, particularly when interacting with the ship monitor and when loading the last journal file.
+
 ### 3.3.7-b1
   * Core
     * Fixed a bug whereby names of materials (Carbon, Iron, Conductive Components, etc) were not always localized.

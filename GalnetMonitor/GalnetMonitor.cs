@@ -29,6 +29,8 @@ namespace GalnetMonitor
 
         private bool running = false;
 
+        public static bool altURL { get; private set; }
+
         public GalnetMonitor()
         {
             // Remove the old configuration file if it still exists
@@ -152,15 +154,40 @@ namespace GalnetMonitor
                 {
                     List<News> newsItems = new List<News>();
                     string firstUid = null;
+
+                    locales.TryGetValue(configuration.language, out locale);
+                    string url = GetGalnetResource("sourceURL");
+                    altURL = false;
                     try
                     {
-                        locales.TryGetValue(configuration.language, out locale);
-                        string url = GetGalnetResource("sourceURL");
-
-                        Logging.Debug("Fetching Galnet articles from " + url);
+                        WebRequest request = WebRequest.Create(url);
+                        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    }
+                    catch (WebException wex)
+                    {
+                        Logging.Warn("Exception contacting primary galnet feed, trying alternate: ", wex.Message);
+                        url = GetGalnetResource("alternateURL");
+                        altURL = true;
+                    }
+                    Logging.Debug("Fetching Galnet articles from " + url);
+                    IEnumerable<FeedItem> items = null;
+                    try
+                    {
                         FeedReader feedReader = new FeedReader(new GalnetFeedItemNormalizer(), true);
-                        IEnumerable<FeedItem> items = feedReader.RetrieveFeed(url);
-                        if (items != null)
+                        items = feedReader.RetrieveFeed(url);
+                    }
+                    catch (WebException wex)
+                    {
+                        Logging.Warn("Exception attempting to obtain galnet feed: ", wex);
+                    }
+                    catch (System.Xml.XmlException xex)
+                    {
+                        Logging.Error("Exception attempting to obtain galnet feed: ", xex);
+                    }
+
+                    if (items != null)
+                    {
+                        try
                         {
                             foreach (GalnetFeedItemNormalizer.ExtendedFeedItem item in items)
                             {
@@ -180,42 +207,39 @@ namespace GalnetMonitor
                                 newsItems.Add(newsItem);
                                 GalnetSqLiteRepository.Instance.SaveNews(newsItem);
                             }
+
+                            if (firstUid != null && firstUid != configuration.lastuuid)
+                            {
+                                Logging.Debug("Updated latest UID to " + firstUid);
+                                configuration.lastuuid = firstUid;
+                                configuration.ToFile();
+                            }
+
+                            if (newsItems.Count > 0)
+                            {
+                                // Spin out event in to a different thread to stop blocking
+                                Thread thread = new Thread(() =>
+                                {
+                                    try
+                                    {
+                                        EDDI.Instance.enqueueEvent(new GalnetNewsPublishedEvent(DateTime.UtcNow, newsItems));
+                                    }
+                                    catch (ThreadAbortException)
+                                    {
+                                        Logging.Debug("Thread aborted");
+                                    }
+                                })
+                                {
+                                    IsBackground = true
+                                };
+                                thread.Start();
+                            }
+
                         }
-                    }
-                    catch (WebException wex)
-                    {
-                        Logging.Warn("Exception attempting to obtain galnet feed: ", wex);
-                    }
-                    catch (System.Xml.XmlException xex)
-                    {
-                        Logging.Error("Exception attempting to obtain galnet feed: ", xex);
-                    }
-
-                    if (firstUid != configuration.lastuuid)
-                    {
-                        Logging.Debug("Updated latest UID to " + firstUid);
-                        configuration.lastuuid = firstUid;
-                        configuration.ToFile();
-                    }
-
-                    if (newsItems.Count > 0)
-                    {
-                        // Spin out event in to a different thread to stop blocking
-                        Thread thread = new Thread(() =>
+                        catch (Exception ex)
                         {
-                            try
-                            {
-                                EDDI.Instance.enqueueEvent(new GalnetNewsPublishedEvent(DateTime.UtcNow, newsItems));
-                            }
-                            catch (ThreadAbortException)
-                            {
-                                Logging.Debug("Thread aborted");
-                            }
-                        })
-                        {
-                            IsBackground = true
-                        };
-                        thread.Start();
+                            Logging.Error("Exception attempting to handle galnet feed: ", ex);
+                        }
                     }
                 }
             }
@@ -250,12 +274,6 @@ namespace GalnetMonitor
                 return GetGalnetResource("categoryPowerplay");
             }
 
-            if (title.StartsWith(GetGalnetResource("titleFilterCg")) ||
-                Regex.IsMatch(content, GetGalnetResource("contentFilterCgRegex")))
-            {
-                return GetGalnetResource("categoryCG");
-            }
-
             if (title.StartsWith(GetGalnetResource("titleFilterStarportStatus")))
             {
                 return GetGalnetResource("categoryStarportStatus");
@@ -265,14 +283,33 @@ namespace GalnetMonitor
             {
                 return GetGalnetResource("categoryWeekInReview");
             }
+            if (title.StartsWith(GetGalnetResource("titleFilterCg")) ||
+                Regex.IsMatch(content, GetGalnetResource("contentFilterCgRegex")))
+            {
+                return GetGalnetResource("categoryCG");
+            }
 
             return GetGalnetResource("categoryArticle");
         }
 
         private string GetGalnetResource(string basename)
         {
-            CultureInfo ci = locale != null ? CultureInfo.GetCultureInfo(locale) : CultureInfo.InvariantCulture;
-            return resourceManager.GetString(basename, ci) ?? null;
+            try
+            {
+                CultureInfo ci = locale != null ? CultureInfo.GetCultureInfo(locale) : CultureInfo.InvariantCulture;
+                string res = resourceManager.GetString(basename, ci);
+                if (string.IsNullOrEmpty(res))
+                {
+                    // Fallback to our invariant culture if the local language returns an empty result
+                    res = resourceManager.GetString(basename, CultureInfo.InvariantCulture);
+                }
+                return res;
+            }
+            catch (Exception ex)
+            {
+                Logging.Error("Failed to obtain Galnet resource for " + basename, ex);
+                return null;
+            }
         }
 
         public Dictionary<string, string> GetGalnetLocales()
@@ -292,11 +329,15 @@ namespace GalnetMonitor
                 {
                     continue;
                 }
+                if (dir.GetFiles().Count() == 0)
+                {
+                    continue;
+                }
                 try
                 {
                     CultureInfo cInfo = new CultureInfo(name);
                     ResourceSet resourceSet = resourceManager.GetResourceSet(cInfo, true, true);
-                    if (resourceSet.GetString("sourceURL") != null)
+                    if (!string.IsNullOrEmpty(resourceSet.GetString("sourceURL")))
                     {
                         satelliteLocales.Add(cInfo.DisplayName, name);
                     }
